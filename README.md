@@ -7,3 +7,4 @@ Purpose: To create a smart kitchen appliance that will keep track of all items i
 
 Features:
 1) Phone App companion
+I changed this
