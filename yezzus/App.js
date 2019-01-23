@@ -1,21 +1,34 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import firebase from 'firebase';
+import ReduxThunk from 'redux-thunk';
+import reducers from './src/reducers';
+import LoginForm from './src/components/LoginForm';
+import Router from './src/Router';
 
-export default class App extends React.Component {
+class App extends Component {
+  componentWillMount() {
+    const config = {
+      apiKey: 'AIzaSyBlDZtJ7DbIOG-6q_vg9v0ob77XZvXbcNg',
+      authDomain: 'yeezusfreezus.firebaseapp.com',
+      databaseURL: 'https://yeezusfreezus.firebaseio.com',
+      projectId: 'yeezusfreezus',
+      storageBucket: 'yeezusfreezus.appspot.com',
+      messagingSenderId: '982035678003'
+    };
+
+  firebase.initializeApp(config);
+  }
   render() {
+    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
+
     return (
-      <View style={styles.container}>
-        <Text>Welcome to MyKitchen.</Text>
-      </View>
+      <Provider store={store}>
+        <LoginForm />
+      </Provider>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
