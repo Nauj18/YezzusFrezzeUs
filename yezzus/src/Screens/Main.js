@@ -6,12 +6,12 @@ class Main extends Component {
   render() {
     return (
       <View>
-        <Header 
-          placement="left"
-          leftComponent={{ icon: 'arrow-back', color: '#fff' }} 
-          centerComponent={{ text: "Device Manager", style: { color: '#fff'} }}
-        />
-        <Text>This is the Device Manager Page!</Text>
+        <Header />
+        <Text>This is Main Page</Text>
+        <Button />
+        <Button />
+        <Button />
+        <Button />
       </View>
     );
   }

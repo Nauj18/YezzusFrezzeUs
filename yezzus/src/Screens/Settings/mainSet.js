@@ -6,7 +6,11 @@ class Main extends Component {
   render() {
     return (
       <View>
-        <Header />
+        <Header 
+          placement="left"
+          leftComponent={{ icon: 'home', color: '#fff' }} 
+          centerComponent={{ text: "Settings", style: { color: '#fff'} }}
+        />
         <Text>These are settings!</Text>
         <Button title="Device Manager"/>
         <Button title="User Settings"/>
