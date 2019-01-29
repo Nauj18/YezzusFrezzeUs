@@ -9,9 +9,9 @@ class Main extends Component {
         <Header 
           placement="left"
           leftComponent={{ icon: 'arrow-back', color: '#fff' }} 
-          centerComponent={{ text: "Device Manager", style: { color: '#fff'} }}
+          centerComponent={{ text: "User Settings", style: { color: '#fff'} }}
         />
-        <Text>This is the Device Manager Page!</Text>
+        <Text>This is the User Settings Page!</Text>
       </View>
     );
   }
