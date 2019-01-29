@@ -7,7 +7,7 @@ class Main extends Component {
     return (
       <View>
         <Header />
-        <Text>This is Main Page</Text>
+        <Text>These are settings!</Text>
         <Button />
         
         <Button />
