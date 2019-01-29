@@ -6,12 +6,12 @@ class Main extends Component {
   render() {
     return (
       <View>
-        <Header />
-        <Text>This is Main Page</Text>
-        <Button />
-        <Button />
-        <Button />
-        <Button />
+        <Header 
+          placement="left"
+          leftComponent={{ icon: 'arrow-back', color: '#fff' }} 
+          centerComponent={{ text: "User Settings", style: { color: '#fff'} }}
+        />
+        <Text>This is the User Settings Page!</Text>
       </View>
     );
   }
