@@ -8,11 +8,8 @@ class Main extends Component {
       <View>
         <Header />
         <Text>This is Main Page</Text>
-        <Button />
-        
-        <Button />
-        <Button />
-        <Button />
+        <Button title="Device Manager" />
+        <Button title="User Manager"/>
       </View>
     );
   }
