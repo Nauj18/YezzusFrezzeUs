@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Header, Button, Input } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 import { emailChanged, passwordChanged, createUser } from '../actions';
 import { Spinner } from './common';
 

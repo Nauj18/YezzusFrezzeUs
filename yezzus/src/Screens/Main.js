@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import { Header, Button } from 'react-native-elements';
 
 class Main extends Component {
@@ -7,11 +8,47 @@ class Main extends Component {
     return (
       <View>
         <Header />
-        <Text>This is Main Page</Text>
-        <Button />
-        <Button />
-        <Button />
-        <Button />
+        <Text style={{ textAlign: 'center', marginTop: 40 }}>
+          Logo Goes Here!
+        </Text>
+        <View
+        style={{
+          flexDirection: 'row',
+          alignSelf: 'center',
+          marginTop: 25 }}
+        >
+          <Button
+          title='Inventory'
+          titleStyle={{ fontSize: 20 }}
+          buttonStyle={{
+          width: 150,
+          height: 60
+          }}
+          containerStyle={{
+            marginRight: 20
+          }}
+          />
+          <Button
+          title='Shopping List'
+          titleStyle={{ fontSize: 20 }}
+          buttonStyle={{
+            width: 150,
+            height: 60
+          }}
+          />
+        </View>
+        <Button
+        title='Settings'
+        titleStyle={{ fontSize: 20 }}
+        buttonStyle={{
+          width: 150,
+          height: 60
+        }}
+        containerStyle={{
+          marginTop: 25,
+          alignItems: 'center'
+        }}
+        />
       </View>
     );
   }
