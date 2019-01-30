@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { Header } from 'react-native-elements';
+import { Header, Button, FlatList, List } from 'react-native-elements';
+import { Actions } from 'react-native-router-flux';
 
 export default class EditShoppingList extends Component {
   render() {
+    const { goBack } = this.props.navigation;
+    
     return (
       <View style={styles.container}>
         <Header
-          leftComponent={{ icon: 'menu', color: '#fff' }}
+          leftComponent={{ icon: 'arrow-back', color: '#fff', onPress: () => goBack() }}
           centerComponent={{ text: 'EDIT',
             style: {
               color: '#fff',
@@ -18,7 +21,6 @@ export default class EditShoppingList extends Component {
           rightComponent={{ icon: 'home', color: '#fff' }}
           containerStyle={{
             height: 85,
-            backgroundColor: '#0E5AC4',
             justifyContent: 'space-around'
           }}
         />
@@ -35,9 +37,19 @@ export default class EditShoppingList extends Component {
         underlineColorAndroid={'transparent'}
         />
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.btntext}>Add Item</Text>
-        </TouchableOpacity>
+        <Button
+            title='Save'
+            titleStyle={{ fontSize: 20 }}
+            buttonStyle={{
+                width: 300,
+                height: 45
+            }}
+            containerStyle={{
+                alignItems: 'center',
+                marginTop: 15
+            }}
+            onPress={Actions.shopList}
+            />
 
       </View>
     );
