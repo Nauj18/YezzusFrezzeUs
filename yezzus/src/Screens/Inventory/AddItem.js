@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
-export default class AddItem extends React.Component {
+export default class AddItem extends Component {
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.header}>Add Item:</Text>
 
-        <TextInput style={styles.textInput} placeholder="Item name"
-          underlineColorAndroid={'transparent'} />
+        <TextInput
+        style={styles.textInput}
+        placeholder="Item name"
+        underlineColorAndroid={'transparent'}
+        />
 
-        <TextInput style={styles.textInput} placeholder="Expiration Date"
-          underlineColorAndroid={'transparent'} />
+        <TextInput
+        style={styles.textInput}
+        placeholder="Expiration Date"
+        underlineColorAndroid={'transparent'}
+        />
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.btntext}>Add Item</Text>

@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { Header, Button, Input } from 'react-native-elements';
+import { Header, Button, FlatList, List } from 'react-native-elements';
+import { Actions } from 'react-native-router-flux';
 
-export default class AddToShoppingList extends React.Component {
+export default class ViewShoppingList extends Component {
   render() {
+    const { goBack } = this.props.navigation;
+
     return (
       <View style={styles.container}>
         <Header
-          leftComponent={{ icon: 'menu', color: '#fff' }}
+          leftComponent={{
+            icon: 'menu',
+            color: '#fff',
+          }}
           centerComponent={{ text: 'SHOPPING LIST',
             style: {
               color: '#fff',
@@ -15,23 +21,47 @@ export default class AddToShoppingList extends React.Component {
               fontWeight: 'bold'
             }
           }}
-          rightComponent={{ icon: 'home', color: '#fff' }}
-          containerStyle={{ 
+          rightComponent={{ icon: 'home', color: '#fff', onPress: () => goBack() }}
+          containerStyle={{
             height: 85,
-            backgroundColor: '#0E5AC4',
             justifyContent: 'space-around'
           }}
         />
 
-        <TextInput style={styles.textInput} placeholder="Item name"
-          underlineColorAndroid={'transparent'} />
 
-        <TextInput style={styles.textInput} placeholder="Expiration Date"
-          underlineColorAndroid={'transparent'} />
+        {/* <List>
+            <FlatList
+                data={[{key: 'a'}, {key: 'b'}]}
+                renderItem={({item}) => <Text>{item.key}</Text>}
+            />
+        </List> */}
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.btntext}>Add Item</Text>
-        </TouchableOpacity>
+        <Button
+            title='Add Item'
+            titleStyle={{ fontSize: 20 }}
+            buttonStyle={{
+                width: 300,
+                height: 45
+            }}
+            containerStyle={{
+                alignItems: 'center',
+                marginTop: 15
+            }}
+            onPress={Actions.addShopList}
+            />
+        <Button
+            title='Edit Item'
+            titleStyle={{ fontSize: 20 }}
+            buttonStyle={{
+                width: 300,
+                height: 45
+            }}
+            containerStyle={{
+                alignItems: 'center',
+                marginTop: 15
+            }}
+            onPress={Actions.editShopList}
+            />
 
       </View>
     );

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { AppRegistry, FlatList, StyleSheet, Text, View, Dimensions, SafeAreaView } from 'react-native';
-import { Header, Button } from 'react-native-elements'
+import { FlatList, StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { Header, Button } from 'react-native-elements';
+import { Actions } from 'react-native-router-flux';
 
 // Basic export that should export the whole screen with the data loaded.
-export default class FlatListBasics extends Component {
+export default class ViewInventory extends Component {
     // runs the rendering of the groupedItems by calling groupData
     // const groupedItems = groupData(data, 2)
 
@@ -15,15 +16,24 @@ export default class FlatListBasics extends Component {
       );
     };
   render() {
+    const { goBack } = this.props.navigation;
+
     return (
       <View style={styles.container}>
 
-        <SafeAreaView style={ styles.row }>
+        <SafeAreaView style={styles.row} >
 
           <Header
-            leftComponent={{ icon: 'menu', color: '#fff'}}
+            leftComponent={{
+              icon: 'home',
+              color: '#fff',
+              onPress: () => goBack()
+             }}
             centerComponent={{ text: 'Inventory', style: { color: '#fff', fontSize: 30, } }}
-            rightcomponent={{ icon: 'home', color: '#fff' }}
+            rightComponent={{
+              icon: 'menu',
+              color: '#fff'
+            }}
           />
 
           {/*<Text style={styles.header1}>Inventory</Text>*/}
@@ -33,10 +43,14 @@ export default class FlatListBasics extends Component {
 
 
           <FlatList
-            data={ data }
+            data={data}
             style={styles.container}
             renderItem={this.renderItem}
             numColumns={3}
+          />
+          <Button
+          title='Add Item'
+          onPress={Actions.addInvList}
           />
         </SafeAreaView>
       </View>
@@ -65,7 +79,6 @@ const styles = StyleSheet.create({
    flex: 1,
    flexDirection: 'row',
    height: 400,
-   marginVertical: 10,
   },
   header1: {
     marginTop: 50,
@@ -100,11 +113,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingRight: 10,
     width: 140,
-  //  padding: 10,
-  //  fontSize: 18,
-  //  height: 44,
-  //  borderColor: '#000',
-  //  borderWidth: 1,
   },
   itemText: {
     fontSize: 24,
