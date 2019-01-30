@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { Header } from 'react-native-elements';
+import { Header, Button, FlatList, List } from 'react-native-elements';
+import { Actions } from 'react-native-router-flux';
 
 export default class AddToShoppingList extends Component {
   render() {
@@ -20,7 +21,6 @@ export default class AddToShoppingList extends Component {
           rightComponent={{ icon: 'home', color: '#fff' }}
           containerStyle={{
             height: 85,
-            backgroundColor: '#0E5AC4',
             justifyContent: 'space-around'
           }}
         />
@@ -37,11 +37,19 @@ export default class AddToShoppingList extends Component {
         underlineColorAndroid={'transparent'}
         />
 
-        <TouchableOpacity
-        style={styles.button}
-        >
-          <Text style={styles.btntext}>Add Item</Text>
-        </TouchableOpacity>
+        <Button
+            title='Add'
+            titleStyle={{ fontSize: 20 }}
+            buttonStyle={{
+                width: 300,
+                height: 45
+            }}
+            containerStyle={{
+                alignItems: 'center',
+                marginTop: 15
+            }}
+            onPress={Actions.shopList}
+            />
 
       </View>
     );
