@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Header, Button } from 'react-native-elements';
 
-class Main extends Component {
+class Main2 extends Component {
   render() {
     return (
       <View>
@@ -27,6 +27,7 @@ class Main extends Component {
           containerStyle={{
             marginRight: 20
           }}
+          onPress={Actions.invList}
           />
           <Button
           title='Shopping List'
@@ -35,10 +36,12 @@ class Main extends Component {
             width: 150,
             height: 60
           }}
+          onPress={Actions.shopList}
           />
         </View>
         <Button
         title='Settings'
+        onPress={Actions.settings}
         titleStyle={{ fontSize: 20 }}
         buttonStyle={{
           width: 150,
@@ -54,4 +57,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default Main2;
