@@ -11,7 +11,7 @@ export default class ViewInventory extends Component {
     renderItem = ({ item, index }) => {
       return (
         <View style={styles.item}>
-          <Text style={styles.itemText}>{item.key}</Text>
+          <Text style={styles.itemText}>{'\t\t\t'+item.key}</Text>
         </View>
       );
     };
@@ -38,7 +38,7 @@ export default class ViewInventory extends Component {
 
           {/*<Text style={styles.header1}>Inventory</Text>*/}
           <Text style={styles.onScreenText}>
-            Item:   Expiration Date:   Days Left:
+            Item:{'\t\t\t'}Expiration Date:{'\t\t\t'}Days Left:
           </Text>
 
 
@@ -50,6 +50,7 @@ export default class ViewInventory extends Component {
           />
           <Button
           title='Add Item'
+          // TODO: Find out what addInvList is
           onPress={Actions.addInvList}
           />
         </SafeAreaView>
@@ -79,6 +80,7 @@ const styles = StyleSheet.create({
    flex: 1,
    flexDirection: 'row',
    height: 400,
+   paddingLeft: 4,
   },
   header1: {
     marginTop: 50,
