@@ -33,7 +33,8 @@ class LoginForm extends Component {
       titleStyle={{ fontSize: 20 }}
       buttonStyle={{
         width: 300,
-        height: 45
+        height: 45,
+        backgroundColor: '#0E5AC4'
       }}
       containerStyle={{
         alignItems: 'center',
@@ -64,10 +65,14 @@ class LoginForm extends Component {
           style: {
             color: '#fff',
             fontSize: 30,
-            fontWeight: 'bold'
-          }
+            fontWeight: 'bold',
+        }
         }}
-          containerStyle={{ height: 85 }}
+          containerStyle={{ 
+            height: 85,
+            backgroundColor: '#0E5AC4',
+            justifyContent: 'space-around'
+          }}
         />
         <Input
           label="Email"
@@ -94,7 +99,8 @@ class LoginForm extends Component {
         style={{
           textAlign: 'center',
           fontSize: 20,
-          textDecorationLine: 'underline'
+          textDecorationLine: 'underline',
+          paddingTop: 10
         }}
         onPress={Actions.acctCreate}
         >
