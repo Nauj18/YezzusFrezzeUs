@@ -105,7 +105,7 @@ export default class ViewShoppingList extends Component {
               fontWeight: 'bold'
             }
           }}
-          rightComponent={{ icon: 'home', color: '#fff', onPress: () => goBack() }}
+          rightComponent={{ icon: 'home', color: '#fff', onPress: () => Actions.main() }}
           containerStyle={{
             height: 85,
             justifyContent: 'space-around'
