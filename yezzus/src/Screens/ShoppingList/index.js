@@ -1,1 +1,0 @@
-export ViewShoppingList from './ViewShoppingList';
