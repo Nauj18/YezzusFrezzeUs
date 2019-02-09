@@ -34,7 +34,6 @@ class LoginForm extends Component {
       buttonStyle={{
         width: 300,
         height: 45,
-        backgroundColor: '#0E5AC4'
       }}
       containerStyle={{
         alignItems: 'center',
@@ -70,7 +69,6 @@ class LoginForm extends Component {
         }}
           containerStyle={{ 
             height: 85,
-            backgroundColor: '#0E5AC4',
             justifyContent: 'space-around'
           }}
         />

@@ -27,12 +27,13 @@ export default class ViewInventory extends Component {
             leftComponent={{
               icon: 'home',
               color: '#fff',
-              onPress: () => goBack()
+              onPress: () => Actions.main()
              }}
             centerComponent={{ text: 'Inventory', style: { color: '#fff', fontSize: 30, } }}
             rightComponent={{
-              icon: 'menu',
-              color: '#fff'
+              icon: 'list',
+              color: '#fff',
+              onPress: () => Actions.shopList()
             }}
           />
 

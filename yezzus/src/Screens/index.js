@@ -1,0 +1,7 @@
+export HomeScreen from './Main'
+export ViewShoppingList from './ShoppingList/ViewShoppingList'
+export ViewInventory from './Inventory/ViewInventory'
+export AddItem from './Inventory/AddItem'
+export Settings from './Settings/mainSet'
+export UserSet from './Settings/userSet'
+export DeviceMan from './Settings/deviceMan'
