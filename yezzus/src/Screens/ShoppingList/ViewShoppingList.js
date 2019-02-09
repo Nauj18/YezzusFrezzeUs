@@ -79,10 +79,10 @@ export default class ViewShoppingList extends Component {
             </TextInput>
               
             <CheckBox
-            style={styles.checkBox}
-            right
-            onPress={() => this.changeCheckBox(index)}
-            checked={this.state.checked[index]} />
+              style={styles.checkBox}
+              right
+              onPress={() => this.changeCheckBox(index)}
+              checked={this.state.checked[index]} />
           </View>
         </Swipeout>
     )
@@ -94,10 +94,7 @@ export default class ViewShoppingList extends Component {
     return (
       <View style={styles.container}>
         <Header
-          leftComponent={{
-            icon: 'menu',
-            color: '#fff',
-          }}
+          leftComponent={{ icon: 'home', color: '#fff', onPress: () => Actions.main() }}
           centerComponent={{ text: 'SHOPPING LIST',
             style: {
               color: '#fff',
@@ -105,7 +102,7 @@ export default class ViewShoppingList extends Component {
               fontWeight: 'bold'
             }
           }}
-          rightComponent={{ icon: 'home', color: '#fff', onPress: () => Actions.main() }}
+          rightComponent={{ icon:'list', color:'#fff', onPress: () => Actions.invList() }}
           containerStyle={{
             height: 85,
             justifyContent: 'space-around'
