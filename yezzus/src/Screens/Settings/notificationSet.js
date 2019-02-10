@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { Header, Button } from 'react-native-elements';
 
-class userSet extends Component {
+class notificationSet extends Component {
   render() {
     const { goBack } = this.props.navigation;
 
@@ -14,12 +14,13 @@ class userSet extends Component {
           color: '#fff',
           onPress: () => goBack()
         }}
-          centerComponent={{ text: 'User Settings', style: { color: '#fff' } }}
+          centerComponent={{ text: 'Notification Settings', 
+          style: { color: '#fff' } }}
         />
-        <Text>This is the User Settings Page!</Text>
+        <Text>This is the Notifications Settings Page!</Text>
       </View>
     );
   }
 }
 
-export default userSet;
+export default notificationSet;
