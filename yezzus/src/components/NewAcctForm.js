@@ -64,11 +64,6 @@ class NewAcctForm extends Component {
           containerStyle={{ marginLeft: 10 }}
         />
         <Input
-          label="Access Code"
-          placeholder="02937482"
-          containerStyle={{ marginLeft: 10 }}
-        />
-        <Input
           label="Email"
           placeholder="email@gmail.com"
           leftIcon={{ type: 'entypo', name: 'email' }}
