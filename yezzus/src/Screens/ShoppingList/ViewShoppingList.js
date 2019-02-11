@@ -3,6 +3,7 @@ import { StyleSheet, View,  FlatList, TextInput } from 'react-native';
 import { Header, CheckBox, Icon } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import Swipeout from 'react-native-swipeout';
+import Items from '../Inventory/Items.json';
 
 export default class ViewShoppingList extends Component {
   state = {
@@ -15,12 +16,22 @@ export default class ViewShoppingList extends Component {
   }
 
   fetchData = async() => {
+    /** 
+    // Random name API
     const response = await fetch('https://randomuser.me/api?results=20');
     const json = await response.json();
     let data = [];
     json.results.forEach(element => {
       data.push({name: `${element.name.first} ${element.name.last}`})
     });
+    **/
+    let data = [];
+    Items.Location.Fridge.forEach( element => {
+      data.push({name: element.Name})
+    })
+    Items.Location.Pantry.forEach( element => {
+      data.push({name: element.Name})
+    })
     this.setState({ data: data });
   }
 
