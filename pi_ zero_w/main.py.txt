@@ -1,0 +1,41 @@
+#IMPORTS
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+import RPi.GPIO as GPIO
+import time
+import cv2
+
+#################################################
+# init
+camera = PiCamera()
+rawCapture = PiRGBArray(camera)
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(23, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+ 
+# Camera warmup
+time.sleep(0.1)
+
+while True:
+
+    # Wait until
+    while True:
+        if(GPIO.input(23) ==1):
+            print(“There is something in front of the camera”)
+            break
+
+    GPIO.cleanup()
+
+    #################################################
+    # OpenCV Stuff: Package data from image into a
+    # barcode and a full image
+
+    # grab an image from the camera
+    camera.capture(rawCapture, format="bgr")
+    image = rawCapture.array
+
+    #################################################
+    # Send the barcode image to barcode reading API (tbd)
+
+    #################################################
+    # Bluetooth Stuff: Send to react

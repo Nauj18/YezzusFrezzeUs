@@ -21,9 +21,14 @@ import { Actions } from 'react-native-router-flux';
 
 
 class Main extends Component {
+  constructor(){
+    super();
+    this.onValueChange = this.onValueChange.bind(this);
+    this.state = {switchValue: false, loggedIn: false};
+  }
   render() {
+
     const { goBack } = this.props.navigation;
-    const switchValue = false;
     return (
       <View style={{flex:1}}>
         <Header
@@ -40,17 +45,20 @@ class Main extends Component {
             onPress={Actions.deviceMan}
           />
           <SettingsList.Item
-            title="Notification Settings"
-            hasNavArrow={false}
-            hasSwitch={true}
-          />
+              hasSwitch={true}
+              switchState={this.state.switchValue}
+              switchOnValueChange={this.onValueChange}
+              hasNavArrow={false}
+              title='Turn on Notifications'
+            />
         </SettingsList>
       </View>
     );
   }
+  onValueChange(value){
+    this.setState({switchValue: value});
+  }
 }
-function onValueChange(boolean) {
-  return !boolean;
-}
+
 
 export default Main;
