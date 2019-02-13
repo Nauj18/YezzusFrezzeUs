@@ -1,27 +1,50 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Header, Button, Input } from 'react-native-elements';
 
 export default class AddItem extends Component {
   render() {
+    const { goBack } = this.props.navigation;
+
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>Add Item:</Text>
+      <Header
+        leftComponent={{ icon: 'arrow-back', color: '#fff', onPress: () => goBack() }}
+        centerComponent={{ text: 'ADD ITEM',
+          style: {
+            color: '#fff',
+            fontSize: 20,
+            fontWeight: 'bold'
+          }
+        }}
+      />
 
-        <TextInput
+        <Input
+        label="Item Name"
         style={styles.textInput}
-        placeholder="Item name"
-        underlineColorAndroid={'transparent'}
+        placeholder="Apples"
+        containerStyle={{ marginLeft: 10, marginTop: 20 }}
         />
 
-        <TextInput
+        <Input
+        label="Expiraton Date"
         style={styles.textInput}
-        placeholder="Expiration Date"
-        underlineColorAndroid={'transparent'}
+        placeholder="2/30/2019"
+        containerStyle={{ marginLeft: 10, marginTop: 20 }}
         />
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.btntext}>Add Item</Text>
-        </TouchableOpacity>
+        <Button
+        title='ADD ITEM'
+        titleStyle={{ fontSize: 20 }}
+        buttonStyle={{
+          width: 300,
+          height: 60,
+          marginTop: 10,
+          alignSelf: 'center',
+          alignItems: 'center',
+        }}
+        onPress={console.log('Item Added')}
+        />
 
       </View>
     );
@@ -31,15 +54,6 @@ export default class AddItem extends Component {
 const styles = StyleSheet.create({
   container: {
     alignSelf: 'stretch',
-  },
-  header: {
-    alignSelf: 'center',
-    fontSize: 30,
-    color: '#000',
-    paddingBottom: 10,
-    marginBottom: 40,
-    borderBottomColor: '#199187',
-    borderBottomWidth: 1,
   },
   textInput: {
       alignSelf: 'stretch',
@@ -51,18 +65,5 @@ const styles = StyleSheet.create({
       backgroundColor: '#e7e7e7',
       paddingLeft: 10,
       paddingRight: 10,
-  },
-  button: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    padding: 20,
-    paddingLeft: 100,
-    paddingRight: 100,
-    backgroundColor: '#59cbbd',
-    marginTop: 30,
-  },
-  btntext: {
-    color: '#fff',
-    fontWeight: 'bold',
   }
 });

@@ -1,124 +1,239 @@
 import React, { Component } from 'react';
-import { FlatList, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Header, Button } from 'react-native-elements';
+import { StyleSheet, View, FlatList, Text, Modal, Alert } from 'react-native';
+import { Header, Icon, Button, Input, Card } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
+import Swipeout from 'react-native-swipeout';
+import Items from './Items.json';
 
-// Basic export that should export the whole screen with the data loaded.
 export default class ViewInventory extends Component {
-    // runs the rendering of the groupedItems by calling groupData
-    // const groupedItems = groupData(data, 2)
+  state = {
+    data: [],
+    checked: [],
+    modalVisible: false,
+  };
 
-    renderItem = ({ item, index }) => {
-      return (
-        <View style={styles.item}>
-          <Text style={styles.itemText}>{'\t\t\t'+item.key}</Text>
-        </View>
-      );
-    };
+  componentWillMount(){
+    this.fetchData();
+  }
+
+  fetchData = async() => {
+    const data = [];
+    Items.Location.Fridge.forEach(element => {
+      data.push({ name: element.Name, expDate: element.Experation_Date });
+    });
+    Items.Location.Pantry.forEach(element => {
+      data.push({ name: element.Name, expDate: element.Experation_Date });
+    });
+    this.setState({ data });
+  }
+
+  renderSeparator() {
+    return <View style={styles.separator} />
+  }
+
+  setModalVisible(visible) {
+  this.setState({ modalVisible: visible });
+}
+
+  deleteItem(item, index){
+    const data = this.state.data;
+    const checked = this.state.checked;
+    data.splice(index, 1);
+    checked.splice(index, 1);
+    this.setState({ data, checked });
+  }
+
+  renderRow(item, index) {
+    const swipeButtons = [{
+      text: 'Delete',
+      backgroundColor: 'red',
+      onPress: () => {
+        this.deleteItem(item, index);
+      }
+    }];
+    return (
+      <Swipeout
+      right={swipeButtons}
+        autoClose={true}
+        backgroundColor='transparent'
+      >
+        <Modal
+          animationType="slide"
+          transparent
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}
+        >
+          <View style={styles.containerStyle}>
+            <View>
+              <Card
+              title="EDIT ITEM"
+              style={{ justifyContent: 'center' }}
+              >
+                <Input
+                label="Food"
+                value={item.name}
+                />
+                <Input
+                label="Experation Date"
+                value={item.expDate}
+                />
+                <Button
+                  onPress={() => {
+                    console.log('ITEM EDITTED');
+                  }}
+                  title='EDIT ITEM'
+                  titleStyle={{ fontSize: 20 }}
+                  buttonStyle={styles.buttonStyle}
+                />
+                <Button
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}
+                  title='CLOSE'
+                  titleStyle={{ fontSize: 20 }}
+                  buttonStyle={styles.buttonStyle}
+                />
+              </Card>
+            </View>
+          </View>
+        </Modal>
+          <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+          >
+            <Text style={styles.item}>
+            {item.name}
+            </Text>
+            <Text style={styles.item}>
+            {item.expDate}
+            </Text>
+            <Icon
+            name='more-vert'
+            onPress={() => {
+              this.setModalVisible(true);
+            }}
+            />
+          </View>
+        </Swipeout>
+    )
+  }
+
   render() {
-    const { goBack } = this.props.navigation;
-
     return (
       <View style={styles.container}>
-
-        <SafeAreaView style={styles.row} >
-
-          <Header
-            leftComponent={{
-              icon: 'home',
+        <Header
+          leftComponent={{ icon: 'home', color: '#fff', onPress: () => Actions.main() }}
+          centerComponent={{ text: 'INVENTORY LIST',
+            style: {
               color: '#fff',
-              onPress: () => Actions.main()
-             }}
-            centerComponent={{ text: 'Inventory', style: { color: '#fff', fontSize: 30, } }}
-            rightComponent={{
-              icon: 'list',
-              color: '#fff',
-              onPress: () => Actions.shopList()
-            }}
-          />
-
-          {/*<Text style={styles.header1}>Inventory</Text>*/}
-          <Text style={styles.onScreenText}>
-            Item:{'\t\t\t'}Expiration Date:{'\t\t\t'}Days Left:
-          </Text>
-
-
-          <FlatList
-            data={data}
-            style={styles.container}
-            renderItem={this.renderItem}
-            numColumns={3}
-          />
-          <Button
-          title='Add Item'
-          // TODO: Find out what addInvList is
+              fontSize: 20,
+              fontWeight: 'bold'
+            }
+          }}
+          rightComponent={{ icon: 'list', color: '#fff', onPress: () => Actions.shopList() }}
+          containerStyle={{
+            height: 85,
+            justifyContent: 'space-around'
+          }}
+        />
+        <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+        >
+        <Text
+        style={styles.itemHead}
+        >
+        Food
+        </Text>
+        <Text
+        style={styles.itemHead}
+        >
+        Expiration Date
+        </Text>
+        <Icon
+          name='add'
+          size={30}
+          containerStyle={{
+            paddingLeft: 6,
+            paddingTop: 5
+          }}
           onPress={Actions.addInvList}
+        />
+        </View>
+          <FlatList
+            data={this.state.data}
+            keyExtractor={(item, index) => index.toString()}
+            ItemSeparatorComponent={this.renderSeparator}
+            extraData={this.state}
+            renderItem={({ item, index }) => this.renderRow(item, index)}
           />
-        </SafeAreaView>
       </View>
+
     );
   }
 }
 
-// Used to have a data variable that contains data to be rendered
-const data = [
-  { key: 'Eggs:' },
-  { key: '1/29/19' },
-  { key: 7 },
-  { key: 'Cheese: ' },
-  { key: '1/30/19 ' },
-  { key: 8 },
-  { key: 'Pizza:' },
-  { key: '1/31/19' },
-  { key: 9 },
-  { key: 'Yeeter: ' },
-  { key: '1/32/19' },
-  { key: 10 },
-];
-
 const styles = StyleSheet.create({
   container: {
-   flex: 1,
-   flexDirection: 'row',
-   height: 400,
-   paddingLeft: 4,
+    alignSelf: 'stretch',
+    flex: 1
   },
-  header1: {
-    marginTop: 50,
-    paddingLeft: 115,
-    paddingRight: 115,
+  itemHead: {
+   marginLeft: 10,
+   padding: 10,
+   fontSize: 18,
+   fontWeight: 'bold'
+  },
+   item: {
+    marginLeft: 10,
+    padding: 10,
+    fontSize: 18,
+   },
+   modalText: {
+     fontSize: 60,
+     padding: 20,
+     marginTop: 20,
+     marginBottom: 20,
+     fontWeight: 'bold',
+     alignSelf: 'center',
+     alignItems: 'center'
+   },
+   separator: {
+    height: 0.5,
+    width: '90%',
     alignSelf: 'center',
-    backgroundColor: '#4d243d',
-    fontSize: 36,
-    color: '#ffffff',
-    justifyContent: 'center',
-    borderColor: '#000',
-    borderWidth: 1,
+    backgroundColor: '#555'
   },
-  header2: {
-    marginTop: 50,
+  containerStyle: {
+  backgroundColor: 'rgba(0, 0, 0, 0.75)',
+  position: 'relative',
+  flex: 1,
+  justifyContent: 'center'
   },
-  onScreenText: {
-    fontSize: 23,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    borderTopColor: '#000',
-    borderTopWidth: 1,
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    padding: 4,
+  textInput: {
+      alignSelf: 'stretch',
+      height: 40,
+      marginBottom: 30,
+      color: '#fff',
+      borderColor: '#fff',
+      borderWidth: 1,
+      backgroundColor: '#e7e7e7',
+      paddingLeft: 10,
+      paddingRight: 10,
+  },
+  buttonStyle: {
+    width: 300,
+    height: 60,
     marginTop: 10,
-  },
-  item: {
-    flex: 1,
-    margin: 3,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    paddingRight: 10,
-    width: 140,
-  },
-  itemText: {
-    fontSize: 24,
-    color: '#000'
+    alignSelf: 'center',
+    alignItems: 'center',
   }
 });
