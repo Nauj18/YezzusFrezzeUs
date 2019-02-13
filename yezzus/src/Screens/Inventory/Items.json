@@ -6,51 +6,51 @@
                     "Name": "Apples",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date:": "2/6/19",
+                    "Experation_Date": "2/6/19",
                     "Quantity": "1"
                 },
                 {
                     "Name": "Eggs",
                     "Barcode": "0002",
                     "Input_Date": "1/29/19",
-                    "Experation_Date:": "2/12/19",
+                    "Experation_Date": "2/12/19",
                     "Quantity": "12"
                 },
-                {   
+                {
                     "Name": "Cheese",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date:": "1/30/19",
+                    "Experation_Date": "1/30/19",
                     "Quantity": "4"
                 },
-                {   
+                {
                     "Name": "Pizza",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date:": "1/31/19",
+                    "Experation_Date": "1/31/19",
                     "Quantity": "2"
                 },
                 {
                     "Name": "Yeeter",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date:": "1/32/19",
+                    "Experation_Date": "1/32/19",
                     "Quantity": "∞"
-                }  
+                }
             ],
             "Pantry":[
                 {
                     "Name": "Cereal",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date:": "1/32/19",
+                    "Experation_Date": "1/32/19",
                     "Quantity": "∞"
                 },
                 {
                     "Name": "Noodles",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date:": "1/32/19",
+                    "Experation_Date": "1/32/19",
                     "Quantity": "∞"
                 }
             ]
