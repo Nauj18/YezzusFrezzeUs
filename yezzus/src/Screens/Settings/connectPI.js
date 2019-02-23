@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { Header, Button, Input } from 'react-native-elements';
 import { Spinner } from '../../components/common';
 
-class deviceMan extends Component {
+class connectPI extends Component {
   applyPress = () => {
     const { goBack } = this.props.navigation;
     console.log('Success');
@@ -17,7 +17,7 @@ class deviceMan extends Component {
 
     return (
       <Button
-      title='Register Device'
+      title='Scan For Device'
       titleStyle={{ fontSize: 20 }}
       buttonStyle={{
         width: 300,
@@ -45,25 +45,10 @@ class deviceMan extends Component {
             onPress: () => goBack() }}
           centerComponent={{ text: 'Connect', style: { color: '#fff' } }}
         />
-        <Input
-          label="SSID"
-          placeholder="Wifi Name"
-          onChange={this.handleChange}
-          value={this.props.device}
-          containerStyle={{ marginLeft: 10 }}
-        />
-
-        <Input
-          label="Password"
-          placeholder="Password"
-          onChange={this.handleChange}
-          value={this.props.device}
-          containerStyle={{ marginLeft: 10 }}
-        />
         {this.renderButton()}
       </View>
     );
   }
 }
 
-export default deviceMan;
+export default connectPI
