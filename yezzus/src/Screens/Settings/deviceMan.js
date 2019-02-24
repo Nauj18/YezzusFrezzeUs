@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Header, Button, Input } from 'react-native-elements';
 import { Spinner } from '../../components/common';
 
@@ -11,12 +11,6 @@ class deviceMan extends Component {
       deviceKey: '012345'
     };
   }
-
-  // applyTextChange = (text) => {
-  //   this.setState(previousState => (
-  //     { deviceKey: text }
-  //   ))
-  // };
 
   applyPress = () => {
     const { goBack } = this.props.navigation;
@@ -51,20 +45,15 @@ class deviceMan extends Component {
     const { goBack } = this.props.navigation;
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <Header
-          leftComponent={{ icon: 'home', color: '#fff', onPress: () => Actions.main() }}
-          centerComponent={{ text: 'Settings',
+          leftComponent={{ icon: 'arrow-back', color: '#fff', onPress: () => goBack() }}
+          centerComponent={{ text: 'Device Manager',
             style: {
               color: '#fff',
               fontSize: 20,
               fontWeight: 'bold'
             }
-          }}
-          rightComponent={{ icon: 'list', color: '#fff', onPress: () => Actions.shopList() }}
-          containerStyle={{
-            height: 85,
-            justifyContent: 'space-around'
           }}
         />
         <Input
@@ -80,4 +69,60 @@ class deviceMan extends Component {
   }
 }
 
+const styles = StyleSheet.create({
+  container: {
+    alignSelf: 'stretch',
+    flex: 1
+  },
+  itemHead: {
+   marginLeft: 10,
+   padding: 10,
+   fontSize: 18,
+   fontWeight: 'bold'
+  },
+   item: {
+    marginLeft: 10,
+    padding: 10,
+    fontSize: 18,
+   },
+   modalText: {
+     fontSize: 60,
+     padding: 20,
+     marginTop: 20,
+     marginBottom: 20,
+     fontWeight: 'bold',
+     alignSelf: 'center',
+     alignItems: 'center'
+   },
+   separator: {
+    height: 0.5,
+    width: '90%',
+    alignSelf: 'center',
+    backgroundColor: '#555'
+  },
+  containerStyle: {
+  backgroundColor: 'rgba(0, 0, 0, 0.75)',
+  position: 'relative',
+  flex: 1,
+  justifyContent: 'center'
+  },
+  textInput: {
+      alignSelf: 'stretch',
+      height: 40,
+      marginBottom: 30,
+      color: '#fff',
+      borderColor: '#fff',
+      borderWidth: 1,
+      backgroundColor: '#e7e7e7',
+      paddingLeft: 10,
+      paddingRight: 10,
+  },
+  buttonStyle: {
+    width: 300,
+    height: 60,
+    marginTop: 10,
+    alignSelf: 'center',
+    alignItems: 'center',
+  }
+});
 export default deviceMan;
