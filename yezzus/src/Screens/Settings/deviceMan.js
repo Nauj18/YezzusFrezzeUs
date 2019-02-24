@@ -3,10 +3,24 @@ import { View, Text } from 'react-native';
 import { Header, Button, Input } from 'react-native-elements';
 import { Spinner } from '../../components/common';
 
+
 class deviceMan extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      deviceKey: '012345'
+    };
+  }
+
+  // applyTextChange = (text) => {
+  //   this.setState(previousState => (
+  //     { deviceKey: text }
+  //   ))
+  // };
+
   applyPress = () => {
     const { goBack } = this.props.navigation;
-    console.log('Success');
+    console.log(this.state.deviceKey);
     goBack();
   };
 
@@ -39,17 +53,24 @@ class deviceMan extends Component {
     return (
       <View style={{ flex: 1 }}>
         <Header
-          leftComponent={{
-            icon: 'arrow-back',
-            color: '#fff',
-            onPress: () => goBack() }}
-          centerComponent={{ text: 'Device Manager', style: { color: '#fff' } }}
+          leftComponent={{ icon: 'home', color: '#fff', onPress: () => Actions.main() }}
+          centerComponent={{ text: 'Settings',
+            style: {
+              color: '#fff',
+              fontSize: 20,
+              fontWeight: 'bold'
+            }
+          }}
+          rightComponent={{ icon: 'list', color: '#fff', onPress: () => Actions.shopList() }}
+          containerStyle={{
+            height: 85,
+            justifyContent: 'space-around'
+          }}
         />
         <Input
           label="Access Code"
-          placeholder="02937482"
-          onChange={this.handleChange}
-          value={this.props.device}
+          value={this.state.deviceKey}
+          onChangeText={(deviceKey) => this.setState({deviceKey})}
           containerStyle={{ marginLeft: 10 }}
         />
 
