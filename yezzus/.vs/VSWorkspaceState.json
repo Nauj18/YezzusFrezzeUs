@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\actions",
+    "\\src\\components\\common",
+    "\\src\\Screens",
+    "\\src\\Screens\\Inventory",
+    "\\src\\Screens\\Settings",
+    "\\src\\Screens\\ShoppingList"
+  ],
+  "SelectedNode": "\\src\\Screens\\Inventory\\AddItem.js",
+  "PreviewInSolutionExplorer": false
+}
