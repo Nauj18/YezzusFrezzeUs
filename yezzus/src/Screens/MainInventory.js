@@ -84,12 +84,22 @@ export default class MainInventory extends Component {
   }
 
   getItemAndDaysLeft(item){
-    let today = moment();
+    let today = moment().format('YYYY-MM-DD');
     let itemExp = moment(item.expDate, "MM/DD/YYYY");
     let result = itemExp.diff(today, 'days');
-
-    if (result < 11) return `${item.name} • ${result} days left`;
+    if (result == 1) return `${item.name} • ${result} day left`;
+    else if (result == 0) return `${item.name} • Expires today`;
+    else if (result < 0) return `${item.name} • Expired`;
+    else if (result < 11) return `${item.name} • ${result} days left`;
     else return `${item.name}`;
+  }
+
+  getTitleStyle(item){
+    let today = moment().format('YYYY-MM-DD');
+    let itemExp = moment(item.expDate, "MM/DD/YYYY");
+    let result = itemExp.diff(today, 'days');
+    if (result == 0) return {color: 'orange'};
+    else if (result < 0) return {color: 'red'};
   }
 
   deleteItem(item, index){
@@ -117,14 +127,13 @@ export default class MainInventory extends Component {
         >
         <TouchableOpacity onPress={() => { this.setEditModalVisible(true); }} >
         <Card
-            title={this.getItemAndDaysLeft(item)}>
+            title={this.getItemAndDaysLeft(item)}
+            titleStyle={this.getTitleStyle(item)}>
             <View style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-            <Text>
-                Expires: {this.formatDate(item)}
-            </Text>
+            <Text> Expires: {this.formatDate(item)} </Text>
             <Text> Quantity: {item.quantity}</Text>
         </View>
         </Card>
@@ -242,7 +251,7 @@ export default class MainInventory extends Component {
                 size={25}
                 name='kebab-horizontal'
                 type='octicon'
-                color='#d7dadd'
+                color='#457ABE'
             />
             
             <Modal
@@ -258,7 +267,7 @@ export default class MainInventory extends Component {
                     bottom:60,
                     left:SCREEN_WIDTH * 0.41 - 100}}>
                 <Icon
-                    onPress={() => { Actions.shopList(); this.setButtonModalVisible(false); }}
+                    onPress={() => { Actions.shoppingList(); this.setButtonModalVisible(false); }}
                     reverse
                     raised
                     size={24}
