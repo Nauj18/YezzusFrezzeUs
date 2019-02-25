@@ -10,7 +10,7 @@ const RouterComponent = () => {
       <Scene key="root" hideNavBar>
         <Scene key="auth">
           <Scene key="login" component={LoginForm} hideNavBar initial />
-          <Scene key="acctCreate" component={NewAcctForm} title="Create Account" />
+          <Scene key="acctCreate" component={NewAcctForm} title="Create Account" hideNavBar />
         </Scene>
 
         <Scene key="mainInventory">

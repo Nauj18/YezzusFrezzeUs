@@ -29,6 +29,29 @@
                     "Input_Date": "1/29/19",
                     "Experation_Date": "5/31/19",
                     "Quantity": "2"
+                }
+            ],
+            "Freezer":[
+                {
+                    "Name": "Chocolate Ice Cream",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "8/23/19",
+                    "Quantity": "1"
+                },
+                {
+                    "Name": "Broccoli",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "7/21/19",
+                    "Quantity": "2"
+                },
+                {
+                    "Name": "Eggo Waffles",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "11/01/19",
+                    "Quantity": "1"
                 },
                 {
                     "Name": "Milk",
