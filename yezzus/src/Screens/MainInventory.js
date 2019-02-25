@@ -120,7 +120,7 @@ export default class MainInventory extends Component {
   }
 
   getTitleStyle(item){
-    let today = moment().format('YYYY-MM-DeD');
+    let today = moment().format('YYYY-MM-DD');
     let itemExp = moment(item.expDate, "MM/DD/YYYY");
     let result = itemExp.diff(today, 'days');
     if (result == 0) return {color: 'orange'};
