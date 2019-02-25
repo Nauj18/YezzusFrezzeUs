@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { Header, Button, Input } from 'react-native-elements';
-import { emailChanged, passwordChanged, loginUser } from '../actions';
-import { Spinner } from './common';
+import { Button, Input, SocialIcon } from 'react-native-elements';
+import { emailChanged, passwordChanged, loginUser, facebookLogin } from '../actions';
 
 class LoginForm extends Component {
   onEmailChange(text) {
@@ -23,10 +22,6 @@ class LoginForm extends Component {
 
 
   renderButton() {
-    if (this.props.loading) {
-      return <Spinner size="large" />;
-    }
-
     return (
       <Button
       title='Login'
@@ -34,6 +29,7 @@ class LoginForm extends Component {
       buttonStyle={{
         width: 300,
         height: 45,
+        backgroundColor: '#457ABE'
       }}
       containerStyle={{
         alignItems: 'center',
@@ -58,53 +54,66 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <Header
-          centerComponent={{ text: 'myKitchen',
-          style: {
-            color: '#fff',
-            fontSize: 30,
-            fontWeight: 'bold',
-        }
-        }}
-          containerStyle={{ 
-            height: 85,
-            justifyContent: 'space-around'
+      <ImageBackground
+        source={require('../../assets/foodies.jpg')}
+        style={{ height: '100%', width: '100%', resizeMethod: 'scale' }}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text
+          style={{ fontSize: 50, fontWeight: 'bold', color: 'white' }}
+          onPress={Actions.mainInventory}
+          >
+          myKitchen
+          </Text>
+          <Input
+            label="Email"
+            placeholder="email@gmail.com"
+            leftIcon={{ type: 'entypo', name: 'email' }}
+            onChangeText={this.onEmailChange.bind(this)}
+            value={this.props.email}
+            inputContainerStyle={{ backgroundColor: 'white', height: 50 }}
+            containerStyle={{ marginTop: 15 }}
+            labelStyle={{ fontSize: 35, color: 'white' }}
+          />
+          <Input
+            secureTextEntry
+            label="Password"
+            placeholder="password"
+            leftIcon={{ type: 'entypo', name: 'lock' }}
+            onChangeText={this.onPasswordChange.bind(this)}
+            value={this.props.password}
+            inputContainerStyle={{ backgroundColor: 'white', height: 50 }}
+            containerStyle={{ marginTop: 15 }}
+            labelStyle={{ fontSize: 30, color: 'white' }}
+          />
+          {this.renderError()}
+
+          {this.renderButton()}
+
+          <SocialIcon
+            title='Sign In With Facebook'
+            button
+            type='facebook'
+            style={{
+              width: 300,
+              height: 45,
+            }}
+            onPress={facebookLogin()}
+          />
+
+          <Text
+          style={{
+            textAlign: 'center',
+            fontSize: 20,
+            textDecorationLine: 'underline',
+            paddingTop: 10
           }}
-        />
-        <Input
-          label="Email"
-          placeholder="email@gmail.com"
-          leftIcon={{ type: 'entypo', name: 'email' }}
-          onChangeText={this.onEmailChange.bind(this)}
-          value={this.props.email}
-          containerStyle={{ marginLeft: 10, marginTop: 20 }}
-        />
-        <Input
-          secureTextEntry
-          label="Password"
-          placeholder="password"
-          leftIcon={{ type: 'entypo', name: 'lock' }}
-          onChangeText={this.onPasswordChange.bind(this)}
-          value={this.props.password}
-          containerStyle={{ marginLeft: 10 }}
-        />
-        {this.renderError()}
-
-        {this.renderButton()}
-
-        <Text
-        style={{
-          textAlign: 'center',
-          fontSize: 20,
-          textDecorationLine: 'underline',
-          paddingTop: 10
-        }}
-        onPress={Actions.acctCreate}
-        >
-          Create Account
-        </Text>
-      </View>
+          onPress={Actions.acctCreate}
+          >
+            Create Account
+          </Text>
+        </View>
+      </ImageBackground>
     );
   }
 }
@@ -118,11 +127,11 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading } = auth;
+  const { email, password, error } = auth;
 
-  return { email, password, error, loading };
+  return { email, password, error };
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser
+  emailChanged, passwordChanged, loginUser, facebookLogin
 })(LoginForm);
