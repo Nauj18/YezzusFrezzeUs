@@ -151,15 +151,17 @@ export default class MainInventory extends Component {
                 style={{ justifyContent: 'center' }}>
                 <Input
                 label="Food"
-                value={item.name}
+                placeholder={item.name}
+                onChangeText={(name) => this.setState({name})}
                 />
                 <Input
                 label="Experation Date"
-                value={item.expDate}
+                placeholder={item.expDate}
+                onChangeText={(date) => this.setState({date})}
                 />
                 <Button
                     onPress={() => {
-                    console.log('ITEM EDITTED');
+                    console.log(this.state);
                     }}
                     title='EDIT ITEM'
                     titleStyle={{ fontSize: 20 }}
