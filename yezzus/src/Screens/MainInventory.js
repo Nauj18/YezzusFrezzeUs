@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, FlatList, Text, Modal, Alert, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, FlatList, Text, Modal, Alert, Dimensions, TouchableOpacity, Picker } from 'react-native';
 import { Header, Icon, Button, Input, Card, ButtonGroup, ListItem} from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import Swipeout from 'react-native-swipeout';
@@ -17,14 +17,17 @@ export default class MainInventory extends Component {
         selectedLocation: "fridge",
         data: {},
         checked: [],
+        itemIndex: 0,
         editModalVisible: false,
+        addModalVisible: false,
         buttonModalVisible: false,
+        addedItem: { name: '', quantity: '', expDate: '' },
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
 
   updateIndex (selectedIndex) {
-    let selectedLocation = "";  
+    let selectedLocation = "";
     switch(selectedIndex){
         case 0:
             selectedLocation = "freezer";
@@ -63,8 +66,30 @@ export default class MainInventory extends Component {
     this.setState({ data });
   }
 
-  setEditModalVisible(editModalVisible) {
-    this.setState({ editModalVisible });
+  setEditModalVisible(editModalVisible, itemIndex) {
+    this.setState({ editModalVisible, itemIndex });
+  }
+
+  setAddModalVisible(addModalVisible) {
+      this.setState({ addModalVisible });
+  }
+
+  addItemNameChanged(name){
+    let addedItem = this.state.addedItem;
+    addedItem.name = name;
+    this.setState({addedItem})
+  }
+
+  addItemQuantityChanged(quantity){
+      let addedItem = this.state.addedItem;
+      addedItem.quantity = quantity;
+      this.setState({addedItem})
+  }
+
+  addItemExpDateChanged(expDate){
+    let addedItem = this.state.addedItem;
+    addedItem.expDate = expDate;
+    this.setState({addedItem})
   }
 
   setButtonModalVisible(buttonModalVisible) {
@@ -84,12 +109,22 @@ export default class MainInventory extends Component {
   }
 
   getItemAndDaysLeft(item){
-    let today = moment();
+    let today = moment().format('YYYY-MM-DD');
     let itemExp = moment(item.expDate, "MM/DD/YYYY");
     let result = itemExp.diff(today, 'days');
-
-    if (result < 11) return `${item.name} • ${result} days left`;
+    if (result == 1) return `${item.name} • ${result} day left`;
+    else if (result == 0) return `${item.name} • Expires today`;
+    else if (result < 0) return `${item.name} • Expired`;
+    else if (result < 11) return `${item.name} • ${result} days left`;
     else return `${item.name}`;
+  }
+
+  getTitleStyle(item){
+    let today = moment().format('YYYY-MM-DeD');
+    let itemExp = moment(item.expDate, "MM/DD/YYYY");
+    let result = itemExp.diff(today, 'days');
+    if (result == 0) return {color: 'orange'};
+    else if (result < 0) return {color: 'red'};
   }
 
   deleteItem(item, index){
@@ -99,6 +134,19 @@ export default class MainInventory extends Component {
     data[this.state.selectedLocation] = list;
 
     this.setState({ data });
+  }
+
+  addNewItem() {
+    let data = [];
+    data.Fridge.push(this.state.addedItem);
+    this.state.data.Fridge.forEach(element => {
+      data.Fridge.push(element);
+    });
+    let checked = [false];
+    this.state.checked.Fridge.forEach(element => {
+      checked.push(element);
+    });
+    this.setState({ data, checked });
   }
 
   renderCard(item, index){
@@ -117,14 +165,13 @@ export default class MainInventory extends Component {
         >
         <TouchableOpacity onPress={() => { this.setEditModalVisible(true); }} >
         <Card
-            title={this.getItemAndDaysLeft(item)}>
+            title={this.getItemAndDaysLeft(item)}
+            titleStyle={this.getTitleStyle(item)}>
             <View style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-            <Text>
-                Expires: {this.formatDate(item)}
-            </Text>
+            <Text> Expires: {this.formatDate(item)} </Text>
             <Text> Quantity: {item.quantity}</Text>
         </View>
         </Card>
@@ -135,11 +182,13 @@ export default class MainInventory extends Component {
             visible={this.state.editModalVisible}
             onRequestClose={() => {
                 Alert.alert('Modal has been closed.');
-            }}>
+            }}
+        >
             <View style={styles.containerStyle}>
                 <Card
                 title="EDIT ITEM"
-                style={{ justifyContent: 'center' }}>
+                style={{ justifyContent: 'center' }}
+                >
                 <Input
                 label="Food"
                 value={item.name}
@@ -156,14 +205,17 @@ export default class MainInventory extends Component {
                     titleStyle={{ fontSize: 20 }}
                     buttonStyle={styles.buttonStyle}
                 />
-                <Button
-                    onPress={() => {
-                    this.setEditModalVisible(!this.state.editModalVisible);
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        fontSize: 20,
+                        textDecorationLine: 'underline',
+                        paddingTop: 10
                     }}
-                    title='CLOSE'
-                    titleStyle={{ fontSize: 20 }}
-                    buttonStyle={styles.buttonStyle}
-                />
+                    onPress={() => this.setEditModalVisible(false)}
+                >
+                    Cancel
+                </Text>
                 </Card>
             </View>
         </Modal>
@@ -174,7 +226,7 @@ export default class MainInventory extends Component {
   render() {
     const inventoryLocation = ['Freezer', 'Fridge', 'Pantry']
     const { selectedIndex } = this.state
-  
+
     return (
       <View style={styles.container}>
         <Header
@@ -207,7 +259,7 @@ export default class MainInventory extends Component {
             selectedButtonStyle={{backgroundColor:'#457ABE'}}
             innerBorderStyle={{color:'#457ABE'}}
             />
-            
+
         </View>
         <View
         style={{
@@ -225,7 +277,7 @@ export default class MainInventory extends Component {
         }}
         >
         </View>
-        
+
           <FlatList
             data={this.state.data[this.state.selectedLocation]}
             keyExtractor={(item, index) => index.toString()}
@@ -233,7 +285,7 @@ export default class MainInventory extends Component {
             extraData={this.state}
             renderItem={({ item, index }) => this.renderCard(item, index)}
           />
-            
+
             <View style={styles.footerButton}>
             <Icon
                 onPress={() => { this.setButtonModalVisible(true); }}
@@ -242,9 +294,9 @@ export default class MainInventory extends Component {
                 size={25}
                 name='kebab-horizontal'
                 type='octicon'
-                color='#d7dadd'
+                color='#457ABE'
             />
-            
+
             <Modal
             animationType={"fade"}
             transparent
@@ -258,7 +310,7 @@ export default class MainInventory extends Component {
                     bottom:60,
                     left:SCREEN_WIDTH * 0.41 - 100}}>
                 <Icon
-                    onPress={() => { Actions.shopList(); this.setButtonModalVisible(false); }}
+                    onPress={() => { Actions.shoppingList(); this.setButtonModalVisible(false); }}
                     reverse
                     raised
                     size={24}
@@ -272,7 +324,7 @@ export default class MainInventory extends Component {
                     bottom:100,
                     left:SCREEN_WIDTH * 0.41}}>
                 <Icon
-                    onPress={() => { Actions.addInvList(); this.setButtonModalVisible(false); }}
+                    onPress={() => { this.setAddModalVisible(true); this.setButtonModalVisible(false); }}
                     reverse
                     raised
                     size={24}
@@ -308,6 +360,58 @@ export default class MainInventory extends Component {
                 </View>
             </View>
            </Modal>
+           <Modal
+             animationType="fade"
+             transparent
+             visible={this.state.addModalVisible}
+             onRequestClose={() => {
+                 Alert.alert('Modal has been closed.');
+             }}>
+             <View style={styles.containerStyle}>
+                 <Card
+                 title="ADD ITEM"
+                 style={{ justifyContent: 'center' }}>
+                 <Input
+                 label="Item"
+                 placeholder="Pineapple"
+                 value={this.state.addedItem.name}
+                 onChangeText={this.addItemNameChanged.bind(this)}
+                 />
+                 <Input
+                 label="Quantity"
+                 placeholder="100"
+                 value={this.state.addedItem.quantity}
+                 onChangeText={this.addItemQuantityChanged.bind(this)}
+                 />
+                 <Input
+                 label="Expiration Date"
+                 placeholder="10/27/2029"
+                 value={this.state.addedItem.expDate}
+                 onChangeText={this.addItemExpDateChanged.bind(this)}
+                 />
+                 <Button
+                     onPress={() => {
+                         this.setAddModalVisible(false);
+                         this.addNewItem();
+                         this.setState({ addedItem: { name: '', quantity: '', expDate: '' } });
+                     }}
+                     title='ADD'
+                     titleStyle={{ fontSize: 20 }}
+                     buttonStyle={styles.buttonStyle}
+                 />
+                 <Text
+                     style={{
+                         textAlign: 'center',
+                         fontSize: 20,
+                         textDecorationLine: 'underline',
+                         paddingTop: 10
+                     }}
+                     onPress={() => this.setAddModalVisible(false)}>
+                     Cancel
+                 </Text>
+                 </Card>
+             </View>
+         </Modal>
         </View>
       </View>
 

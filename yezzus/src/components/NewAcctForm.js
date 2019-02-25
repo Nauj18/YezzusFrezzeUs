@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, Input } from 'react-native-elements';
 import { emailChanged, passwordChanged, createUser } from '../actions';
-import { Spinner } from './common';
 
 class NewAcctForm extends Component {
   onEmailChange(text) {
@@ -22,17 +21,14 @@ class NewAcctForm extends Component {
 
 
   renderButton() {
-    if (this.props.loading) {
-      return <Spinner size="large" />;
-    }
-
     return (
       <Button
       title='New Account'
       titleStyle={{ fontSize: 20 }}
       buttonStyle={{
         width: 300,
-        height: 45
+        height: 45,
+        backgroundColor: '#457ABE'
       }}
       containerStyle={{
         alignItems: 'center',
@@ -56,34 +52,67 @@ class NewAcctForm extends Component {
   }
 
   render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <Input
-          label="Full Name"
-          placeholder="John Doe"
-          containerStyle={{ marginLeft: 10 }}
-        />
-        <Input
-          label="Email"
-          placeholder="email@gmail.com"
-          leftIcon={{ type: 'entypo', name: 'email' }}
-          onChangeText={this.onEmailChange.bind(this)}
-          value={this.props.email}
-          containerStyle={{ marginLeft: 10 }}
-        />
-        <Input
-          secureTextEntry
-          label="Password"
-          placeholder="password"
-          leftIcon={{ type: 'entypo', name: 'lock' }}
-          onChangeText={this.onPasswordChange.bind(this)}
-          value={this.props.password}
-          containerStyle={{ marginLeft: 10 }}
-        />
-        {this.renderError()}
+    const { goBack } = this.props.navigation;
 
-        {this.renderButton()}
-      </View>
+    return (
+      <ImageBackground
+      source={require('../../assets/foodies.jpg')}
+      style={{ height: '100%', width: '100%' }}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text
+          style={{ fontSize: 50, fontWeight: 'bold', color: 'white' }}
+          >
+          Create User
+          </Text>
+          <Input
+            label="Full Name"
+            placeholder="John Doe"
+            containerStyle={{ marginLeft: 10 }}
+            inputContainerStyle={{ backgroundColor: 'white', height: 50 }}
+            labelStyle={{ fontSize: 35, color: 'white' }}
+          />
+          <Input
+            label="Email"
+            placeholder="email@gmail.com"
+            leftIcon={{ type: 'entypo', name: 'email' }}
+            onChangeText={this.onEmailChange.bind(this)}
+            value={this.props.email}
+            containerStyle={{ marginTop: 15 }}
+            inputContainerStyle={{ backgroundColor: 'white', height: 50 }}
+            labelStyle={{ fontSize: 35, color: 'white' }}
+          />
+          <Input
+            secureTextEntry
+            label="Password"
+            placeholder="password"
+            leftIcon={{ type: 'entypo', name: 'lock' }}
+            onChangeText={this.onPasswordChange.bind(this)}
+            value={this.props.password}
+            containerStyle={{ marginTop: 15 }}
+            inputContainerStyle={{ backgroundColor: 'white', height: 50 }}
+            labelStyle={{ fontSize: 35, color: 'white' }}
+          />
+          {this.renderError()}
+
+          {this.renderButton()}
+
+          <Button
+          title='Back'
+          titleStyle={{ fontSize: 20 }}
+          buttonStyle={{
+            width: 300,
+            height: 45,
+            backgroundColor: '#457ABE'
+          }}
+          containerStyle={{
+            alignItems: 'center',
+            marginTop: 15
+          }}
+          onPress={() => goBack()}
+          />
+        </View>
+      </ImageBackground>
     );
   }
 }
@@ -97,9 +126,9 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading } = auth;
+  const { email, password, error } = auth;
 
-  return { email, password, error, loading };
+  return { email, password, error };
 };
 
 export default connect(mapStateToProps, {
