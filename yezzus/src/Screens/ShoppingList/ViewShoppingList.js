@@ -105,7 +105,7 @@ export default class ViewShoppingList extends Component {
     return (
       <View style={styles.container}>
         <Header
-          leftComponent={{ icon: 'home', color: '#fff', onPress: () => Actions.main() }}
+          leftComponent={{ icon: 'arrow-back', color: '#fff', onPress: () => goBack() }}
           centerComponent={{ text: 'SHOPPING LIST',
             style: {
               color: '#fff',
@@ -113,10 +113,10 @@ export default class ViewShoppingList extends Component {
               fontWeight: 'bold'
             }
           }}
-          rightComponent={{ icon:'list', color:'#fff', onPress: () => Actions.invList() }}
           containerStyle={{
             height: 85,
-            justifyContent: 'space-around'
+            justifyContent: 'space-around',
+            backgroundColor: '#457ABE'
           }}
         />
         <View>
@@ -124,7 +124,7 @@ export default class ViewShoppingList extends Component {
           name='add'
           size={30}
           containerStyle={{
-            alignItems:'flex-start',
+            alignItems:'flex-end',
             paddingLeft: 6,
             paddingTop: 5
           }}

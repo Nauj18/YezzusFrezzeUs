@@ -6,36 +6,131 @@
                     "Name": "Apples",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date": "2/6/19",
+                    "Experation_Date": "2/27/19",
                     "Quantity": "1"
                 },
                 {
                     "Name": "Eggs",
                     "Barcode": "0002",
                     "Input_Date": "1/29/19",
-                    "Experation_Date": "2/12/19",
+                    "Experation_Date": "2/28/19",
                     "Quantity": "12"
                 },
                 {
                     "Name": "Cheese",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date": "1/30/19",
+                    "Experation_Date": "3/03/19",
                     "Quantity": "4"
                 },
                 {
-                    "Name": "Pizza",
+                    "Name": "Chicken",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date": "1/31/19",
+                    "Experation_Date": "5/31/19",
+                    "Quantity": "2"
+                }
+            ],
+            "Freezer":[
+                {
+                    "Name": "Chocolate Ice Cream",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "8/23/19",
+                    "Quantity": "1"
+                },
+                {
+                    "Name": "Broccoli",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "7/21/19",
                     "Quantity": "2"
                 },
                 {
-                    "Name": "Yeeter",
+                    "Name": "Eggo Waffles",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date": "1/32/19",
-                    "Quantity": "∞"
+                    "Experation_Date": "11/01/19",
+                    "Quantity": "1"
+                },
+                {
+                    "Name": "Milk",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "6/01/19",
+                    "Quantity": "1"
+                },
+                {
+                    "Name": "Butter",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "6/11/19",
+                    "Quantity": "3"
+                },
+                {
+                    "Name": "Ground Beef",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "6/13/19",
+                    "Quantity": "2"
+                },
+                {
+                    "Name": "Bacon",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "6/19/19",
+                    "Quantity": "1"
+                },
+                {
+                    "Name": "Cream Cheese",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "6/21/19",
+                    "Quantity": "1"
+                },
+                {
+                    "Name": "Orange Juice",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "6/30/19",
+                    "Quantity": "2"
+                },
+                {
+                    "Name": "Celery",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "7/01/19",
+                    "Quantity": "3"
+                }
+            ],
+            "Freezer":[
+                {
+                    "Name": "Chocolate Ice Cream",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "3/02/19",
+                    "Quantity": "1"
+                },
+                {
+                    "Name": "Broccoli",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "7/21/19",
+                    "Quantity": "2"
+                },
+                {
+                    "Name": "Eggo Waffles",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "11/01/19",
+                    "Quantity": "1"
+                },
+                {
+                    "Name": "Bagel Bites",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "10/16/19",
+                    "Quantity": "1"
                 }
             ],
             "Pantry":[
@@ -43,15 +138,29 @@
                     "Name": "Cereal",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date": "1/32/19",
-                    "Quantity": "∞"
+                    "Experation_Date": "6/03/19",
+                    "Quantity": "1"
                 },
                 {
-                    "Name": "Noodles",
+                    "Name": "Pasta",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Experation_Date": "1/32/19",
-                    "Quantity": "∞"
+                    "Experation_Date": "8/12/19",
+                    "Quantity": "3"
+                },
+                {
+                    "Name": "Crackers",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "5/25/19",
+                    "Quantity": "3"
+                },
+                {
+                    "Name": "Mac 'n Cheese",
+                    "Barcode": "0001",
+                    "Input_Date": "1/29/19",
+                    "Experation_Date": "12/20/19",
+                    "Quantity": "3"
                 }
             ]
         }
