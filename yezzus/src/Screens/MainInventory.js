@@ -17,10 +17,12 @@ export default class MainInventory extends Component {
         selectedLocation: "fridge",
         data: {},
         checked: [],
-        itemIndex: 0,
+        item: {},
+        editedItem: {},
         editModalVisible: false,
         addModalVisible: false,
         buttonModalVisible: false,
+        itemIndex: 0,
         addedItem: { name: '', quantity: '', expDate: '' },
     }
     this.updateIndex = this.updateIndex.bind(this)
@@ -66,8 +68,9 @@ export default class MainInventory extends Component {
     this.setState({ data });
   }
 
-  setEditModalVisible(editModalVisible, itemIndex) {
-    this.setState({ editModalVisible, itemIndex });
+  setEditModalVisible(editModalVisible, item, itemIndex) {
+    let editedItem = {name: item.name, quantity: item.quantity, expDate: item.expDate}
+    this.setState({ editModalVisible, item, itemIndex, editedItem });
   }
 
   setAddModalVisible(addModalVisible) {
@@ -90,6 +93,24 @@ export default class MainInventory extends Component {
     let addedItem = this.state.addedItem;
     addedItem.expDate = expDate;
     this.setState({addedItem})
+  }
+
+  editItemNameChanged(name){
+    let editedItem = this.state.editedItem;
+    editedItem.name = name;
+    this.setState({editedItem})
+  }
+
+  editItemQuantityChanged(quantity){
+      let editedItem = this.state.editedItem;
+      editedItem.quantity = quantity;
+      this.setState({editedItem})
+  }
+
+  editItemExpDateChanged(expDate){
+    let editedItem = this.state.editedItem;
+    editedItem.expDate = expDate;
+    this.setState({editedItem})
   }
 
   setButtonModalVisible(buttonModalVisible) {
@@ -149,6 +170,13 @@ export default class MainInventory extends Component {
     this.setState({ data, checked });
   }
 
+  itemEdited(){
+    let data = this.state.data;
+    let selectedLocation = this.state.selectedLocation;
+    data[selectedLocation][this.state.itemIndex] = this.state.editedItem;
+    this.setState({data});
+  }
+
   renderCard(item, index){
     const swipeButtons = [{
         text: 'Delete',
@@ -163,7 +191,7 @@ export default class MainInventory extends Component {
           autoClose={true}
           backgroundColor='transparent'
         >
-        <TouchableOpacity onPress={() => { this.setEditModalVisible(true); }} >
+        <TouchableOpacity onPress={() => { this.setEditModalVisible(true, item, index); }} >
         <Card
             title={this.getItemAndDaysLeft(item)}
             titleStyle={this.getTitleStyle(item)}>
@@ -191,15 +219,23 @@ export default class MainInventory extends Component {
                 >
                 <Input
                 label="Food"
-                value={item.name}
+                value={this.state.editedItem.name}
+                onChangeText={ this.editItemNameChanged.bind(this) }
+                />
+                <Input
+                label="Quantity"
+                value={this.state.editedItem.quantity}
+                onChangeText={ this.editItemQuantityChanged.bind(this) }
                 />
                 <Input
                 label="Experation Date"
-                value={item.expDate}
+                value={this.state.editedItem.expDate}
+                onChangeText={ this.editItemExpDateChanged.bind(this) }
                 />
                 <Button
                     onPress={() => {
-                    console.log('ITEM EDITTED');
+                    this.itemEdited();
+                    this.setEditModalVisible(false, {}, this.state.itemIndex)
                     }}
                     title='EDIT ITEM'
                     titleStyle={{ fontSize: 20 }}
@@ -212,7 +248,7 @@ export default class MainInventory extends Component {
                         textDecorationLine: 'underline',
                         paddingTop: 10
                     }}
-                    onPress={() => this.setEditModalVisible(false)}
+                    onPress={() => this.setEditModalVisible(false, {}, this.state.itemIndex)}
                 >
                     Cancel
                 </Text>
