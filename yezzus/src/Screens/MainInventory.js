@@ -173,6 +173,13 @@ export default class MainInventory extends Component {
     this.setState({data});
   }
 
+  itemEdited(){
+    let data = this.state.data;
+    let selectedLocation = this.state.selectedLocation;
+    data[selectedLocation][this.state.itemIndex] = this.state.editedItem;
+    this.setState({data});
+  }
+
   renderCard(item, index){
     const swipeButtons = [{
         text: 'Delete',
