@@ -16,7 +16,6 @@ export default class MainInventory extends Component {
         selectedIndex: 1,
         selectedLocation: "fridge",
         data: {},
-        checked: [],
         item: {},
         editedItem: {},
         editModalVisible: false,
@@ -57,13 +56,13 @@ export default class MainInventory extends Component {
         pantry: []
     };
     Items.Location.Fridge.forEach(element => {
-      data.fridge.push({ name: element.Name, expDate: element.Experation_Date, quantity: element.Quantity });
+      data.fridge.push({ name: element.Name, expDate: element.Expiration_Date, quantity: element.Quantity });
     });
     Items.Location.Freezer.forEach(element => {
-        data.freezer.push({ name: element.Name, expDate: element.Experation_Date, quantity: element.Quantity });
+        data.freezer.push({ name: element.Name, expDate: element.Expiration_Date, quantity: element.Quantity });
       });
     Items.Location.Pantry.forEach(element => {
-      data.pantry.push({ name: element.Name, expDate: element.Experation_Date, quantity: element.Quantity });
+      data.pantry.push({ name: element.Name, expDate: element.Expiration_Date, quantity: element.Quantity });
     });
     this.setState({ data });
   }
@@ -158,16 +157,20 @@ export default class MainInventory extends Component {
   }
 
   addNewItem() {
-    let data = [];
-    data.Fridge.push(this.state.addedItem);
-    this.state.data.Fridge.forEach(element => {
-      data.Fridge.push(element);
+    let data = {fridge: [], freezer: [], pantry: []};
+    let location = this.state.selectedLocation;
+    data[location].push(this.state.addedItem);
+    this.state.data[location].forEach(element => {
+      data[location].push(element);
     });
-    let checked = [false];
-    this.state.checked.Fridge.forEach(element => {
-      checked.push(element);
-    });
-    this.setState({ data, checked });
+    this.setState({ data });
+  }
+
+  itemEdited(){
+    let data = this.state.data;
+    let selectedLocation = this.state.selectedLocation;
+    data[selectedLocation][this.state.itemIndex] = this.state.editedItem;
+    this.setState({data});
   }
 
   itemEdited(){
@@ -228,7 +231,7 @@ export default class MainInventory extends Component {
                 onChangeText={ this.editItemQuantityChanged.bind(this) }
                 />
                 <Input
-                label="Experation Date"
+                label="Expiration Date"
                 value={this.state.editedItem.expDate}
                 onChangeText={ this.editItemExpDateChanged.bind(this) }
                 />
@@ -237,7 +240,7 @@ export default class MainInventory extends Component {
                     this.itemEdited();
                     this.setEditModalVisible(false, {}, this.state.itemIndex)
                     }}
-                    title='EDIT ITEM'
+                    title='SAVE'
                     titleStyle={{ fontSize: 20 }}
                     buttonStyle={styles.buttonStyle}
                 />
@@ -429,7 +432,6 @@ export default class MainInventory extends Component {
                      onPress={() => {
                          this.setAddModalVisible(false);
                          this.addNewItem();
-                         this.setState({ addedItem: { name: '', quantity: '', expDate: '' } });
                      }}
                      title='ADD'
                      titleStyle={{ fontSize: 20 }}

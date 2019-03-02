@@ -19,10 +19,10 @@ export default class ViewInventory extends Component {
   fetchData = async() => {
     const data = [];
     Items.Location.Fridge.forEach(element => {
-      data.push({ name: element.Name, expDate: element.Experation_Date });
+      data.push({ name: element.Name, expDate: element.Expiration_Date });
     });
     Items.Location.Pantry.forEach(element => {
-      data.push({ name: element.Name, expDate: element.Experation_Date });
+      data.push({ name: element.Name, expDate: element.Expiration_Date });
     });
     this.setState({ data });
   }
@@ -76,7 +76,7 @@ export default class ViewInventory extends Component {
                 value={item.name}
                 />
                 <Input
-                label="Experation Date"
+                label="Expiration Date"
                 value={item.expDate}
                 />
                 <Button
