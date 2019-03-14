@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Header, Button, Input } from 'react-native-elements';
-import firebase from './src/firebase.js'
+import firebase from './firebase.js'
 
 export default class AddItem extends Component {
     constructor() {
       super();
-      this.setState() = {
+      state = {
         currentItem: '',
-        expDate: ''
+        expDate: '',
+        items: []
       }
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
