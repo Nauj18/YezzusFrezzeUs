@@ -273,7 +273,8 @@ export default class MainInventory extends Component {
             style: {
               color: '#fff',
               fontSize: 20,
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              fontFamily: 'Helvetica'
             }
           }}
           rightComponent={{ icon: 'settings', color: '#fff', onPress: () => Actions.settings() }}
@@ -377,7 +378,7 @@ export default class MainInventory extends Component {
                     bottom:60,
                     left:SCREEN_WIDTH * 0.41 + 100}}>
                 <Icon
-                    onPress={() => { this.setButtonModalVisible(false); }}
+                    onPress={() => { Actions.recipes(); this.setButtonModalVisible(false); }}
                     reverse
                     raised
                     size={24}

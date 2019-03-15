@@ -2,7 +2,7 @@ import React from 'react';
 import { Scene, Router } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import NewAcctForm from './components/NewAcctForm';
-import { Settings, NotificationSet, DeviceMan, ViewInventory, AddItem, MainInventory, NewShoppingList } from './Screens'
+import { Settings, NotificationSet, DeviceMan, ViewInventory, AddItem, MainInventory, NewShoppingList, Recipes } from './Screens'
 
 const RouterComponent = () => {
   return (
@@ -21,6 +21,7 @@ const RouterComponent = () => {
           <Scene key="notificationSet" component={NotificationSet} title="Notification Set" hideNavBar />
           <Scene key="deviceMan" component={DeviceMan} title="Device Man" hideNavBar />
           <Scene key="shoppingList" component={NewShoppingList} title="Shopping List" hideNavBar />
+          <Scene key="recipes" component={Recipes} title="Recipes" hideNavBar />
         </Scene>
       </Scene>
     </Router>

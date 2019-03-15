@@ -61,7 +61,7 @@ class NewAcctForm extends Component {
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text
-          style={{ fontSize: 50, fontWeight: 'bold', color: 'white' }}
+          style={{ fontSize: 50, fontWeight: 'bold', color: 'white', fontFamily: 'Noteworthy-Bold' }}
           >
           Create User
           </Text>

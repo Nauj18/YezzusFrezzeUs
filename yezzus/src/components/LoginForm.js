@@ -60,7 +60,7 @@ class LoginForm extends Component {
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text
-          style={{ fontSize: 50, fontWeight: 'bold', color: 'white' }}
+          style={{ fontSize: 50, fontWeight: 'bold', color: 'white', fontFamily: 'Zapfino' }}
           onPress={Actions.mainInventory}
           >
           myKitchen
