@@ -4,6 +4,8 @@ import { createStore, applyMiddleware } from 'redux';
 import firebase from 'firebase';
 import ReduxThunk from 'redux-thunk';
 import reducers from './src/reducers';
+
+import store from './src/store';
 import Router from './src/Router';
 
 class App extends Component {
@@ -20,8 +22,6 @@ class App extends Component {
   firebase.initializeApp(config);
   }
   render() {
-    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
-
     return (
       <Provider store={store}>
         <Router />

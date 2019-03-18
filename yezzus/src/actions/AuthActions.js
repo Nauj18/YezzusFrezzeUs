@@ -55,19 +55,24 @@ export const createUser = ({ email, password }) => {
 };
 
 export const facebookLogin = () => async dispatch => {
-    let token = await AsyncStorage.getItem('fb_token');
-
-    if (token) {
-      // Dispatch an action saying FB login is done
-      dispatch({ type: FACEBOOK_LOGIN_SUCCESS, payload: token });
-    } else {
-      // Start up FB Login process
-      doFacebookLogin(dispatch);
-    }
+    // const token = await AsyncStorage.getItem('fb_token');
+    //
+    // if (token) {
+    // // Dispatch an action saying FB login is done
+    // dispatch({
+    //   type: FACEBOOK_LOGIN_SUCCESS,
+    //   payload: token,
+    // },
+    //   Actions.mainInventory()
+    // );
+    // } else {
+    // Start up FB Login process
+    doFacebookLogin(dispatch);
+    // }
   };
 
 const doFacebookLogin = async dispatch => {
-  let { type, token } = await Facebook.logInWithReadPermissionsAsync('286320171987520', {
+  const { type, token } = await Facebook.logInWithReadPermissionsAsync('286320171987520', {
     permissions: ['public_profile']
   });
 
@@ -76,9 +81,14 @@ const doFacebookLogin = async dispatch => {
   }
 
   await AsyncStorage.setItem('fb_token', token);
-  dispatch({ type: FACEBOOK_LOGIN_SUCCESS, payload: token });
-
-  Actions.mainInventory();
+  dispatch({
+    type: FACEBOOK_LOGIN_SUCCESS,
+    payload: token
+  },
+    Actions.mainInventory()
+  )
+  .catch((error) =>
+    console.log(error));
 };
 
 
@@ -87,6 +97,7 @@ const loginUserFail = (dispatch) => {
 };
 
 const loginUserSuccess = (dispatch, user) => {
+  AsyncStorage.setItem(user);
   dispatch({
     type: LOGIN_USER_SUCCESS,
     payload: user
