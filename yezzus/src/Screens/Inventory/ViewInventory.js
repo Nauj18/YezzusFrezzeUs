@@ -213,10 +213,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#555'
   },
   containerStyle: {
-  backgroundColor: 'rgba(0, 0, 0, 0.75)',
-  position: 'relative',
-  flex: 1,
-  justifyContent: 'center'
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    position: 'relative',
+    flex: 1,
+    justifyContent: 'center'
   },
   textInput: {
       alignSelf: 'stretch',

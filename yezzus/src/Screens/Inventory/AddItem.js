@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Header, Button, Input } from 'react-native-elements';
+import {
+  ADD_ITEM_SUCCESS
+} from './addTypes';
+import { App } from '../../../App'
+
+let addThatItem = ( name, expDate, quantity, ) => {
+  firebase.database().ref(`/yeesusfreezus/Location/`)
+    .push({ name, expDate, quantity, location });
+};
 
 export default class AddItem extends Component {
   render() {
@@ -43,7 +52,7 @@ export default class AddItem extends Component {
           alignSelf: 'center',
           alignItems: 'center',
         }}
-        onPress={console.log('Item Added')}
+        onPress={this.addAnItem(Hey, 11/11/11, 111)}
         />
 
       </View>
