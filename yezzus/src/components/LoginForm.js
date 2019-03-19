@@ -3,7 +3,12 @@ import { View, Text, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Button, Input, SocialIcon } from 'react-native-elements';
-import { emailChanged, passwordChanged, loginUser, facebookLogin } from '../actions';
+import {
+  emailChanged,
+  passwordChanged,
+  loginUser,
+  facebookLogin,
+} from '../actions';
 
 class LoginForm extends Component {
   onEmailChange(text) {
@@ -129,7 +134,7 @@ const styles = {
 const mapStateToProps = ({ auth }) => {
   const { email, password, error } = auth;
 
-  return { email, password, error };
+  return { email, password, error, token: auth.token };
 };
 
 export default connect(mapStateToProps, {

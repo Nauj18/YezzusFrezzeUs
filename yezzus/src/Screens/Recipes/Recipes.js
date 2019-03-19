@@ -6,6 +6,7 @@ import { Actions } from 'react-native-router-flux';
 const API_KEY = '6aa6eba8b0845d9c2db7f1f140732050';
 
 export default class Recipes extends Component{
+
   state = {
     data: [],
     recipes: [],
@@ -13,7 +14,8 @@ export default class Recipes extends Component{
     selectedRecipe: [],
     selectedItems: [],
     filterType: '',
-    recipeModalVisible: false
+    recipeModalVisible: false,
+    ingredientsModalVisible: true,
   };
 
   componentWillMount(){
@@ -47,11 +49,14 @@ export default class Recipes extends Component{
     const recipeDetails = await detailResults.json();
 
     this.setState({ recipeDetails: recipeDetails.recipe });
-  
   }
 
   setRecipeModalVisible(recipeModalVisible) {
     this.setState({ recipeModalVisible });
+  }
+
+  setIngredientsModalVisible(ingredientsModalVisible) {
+    this.setState({ ingredientsModalVisible });
   }
 
   renderSeparator() {
@@ -68,7 +73,6 @@ export default class Recipes extends Component{
   }
 
   getTitle(){
-    console.log(this.state.recipeDetails)
     return(this.state.recipeDetails.title)
   }
 
@@ -142,13 +146,39 @@ export default class Recipes extends Component{
               fontFamily: 'Helvetica'
             }
           }}
+          rightComponent={{ icon: 'search', color: '#fff', onPress:() => { this.setIngredientsModalVisible(true); }}}
           containerStyle={{
             height: 85,
             justifyContent: 'space-around',
             backgroundColor: '#457ABE'
           }}
         />
-        <View style={styles.list}>
+        <Modal
+            animationType="fade"
+            transparent
+            visible={this.state.ingredientsModalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+            }}
+          >
+            <View style={styles.containerStyle}>
+              <Card
+              title="SELECT ITEMS"
+              style={{ justifyContent: 'center' }}
+              >
+              <Text>ITEMS WILL BE HERE</Text>
+              <Button
+                onPress={() => {
+                  this.setIngredientsModalVisible(false);
+                }}
+                title='SEARCH'
+                titleStyle={{ fontSize: 20 }}
+                buttonStyle={styles.buttonStyle}
+              />
+              </Card>
+            </View>
+          </Modal>
+          <View style={styles.list}>
           <FlatList
             data={this.state.recipes}
             keyExtractor={(item, index) => index.toString()}
@@ -157,6 +187,7 @@ export default class Recipes extends Component{
             renderItem={({ item, index }) => this.renderCard(item, index)}
           />
         </View>
+
       </View>
     );
   }
@@ -171,16 +202,24 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // padding: 40,
-    // marginBottom: 40
   },
   listItem: {
     maxWidth: Dimensions.get('window').width /2,
-    // height: Dimensions.get('window').height /3,
     flex:0.5,
-    // backgroundColor: '#fff',
-    // marginBottom: 20,
     borderRadius: 4,
+  },
+  container: {
+    alignSelf: 'stretch',
+    flex: 1
+  },
+  modalText: {
+    fontSize: 60,
+    padding: 20,
+    marginTop: 20,
+    marginBottom: 20,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    alignItems: 'center'
   },
   containerStyle: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
@@ -201,4 +240,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: "#555"
   },
-})
+  buttonStyle: {
+    width: 300,
+    height: 60,
+    marginTop: 10,
+    alignSelf: 'center',
+    alignItems: 'center',
+    backgroundColor: '#457ABE'
+  }
+});
