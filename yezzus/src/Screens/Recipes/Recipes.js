@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { ScrollView, Text, StyleSheet, TextInput, Image, View, ActivityIndicator, FlatList, TouchableOpacity, Modal, Dimensions } from 'react-native';
-import { Icon, Button, Header, Card } from 'react-native-elements';
+import { Icon, Button, Header, Card, Avatar } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 
-const API_KEY = '6aa6eba8b0845d9c2db7f1f140732050';
+// const API_KEY = '6aa6eba8b0845d9c2db7f1f140732050';
+const API_KEY = '84e7f1ece3be429157e54ec9cda3ec54'
 
 export default class Recipes extends Component{
 
@@ -19,7 +20,7 @@ export default class Recipes extends Component{
   };
 
   componentWillMount(){
-    let params = {query: 'chicken%20breast,tortilla', sort: 'r'}
+    let params = {query: 'chicken%20breast,spinach', sort: 'r'}
     this.fetchData(params);
   }
 
@@ -83,15 +84,7 @@ export default class Recipes extends Component{
           <Card
             title={item.title}
             titleStyle={{fontSize: 12}}
-            containerStyle={{height: 150}}>
-            <View style={{
-              flexDirection: 'row',
-            }}>
-            <Image
-              style={styles.image}
-              source={{uri: item.image_url}}
-              PlaceholderContent={<ActivityIndicator />}/>
-            </View>
+            image={{uri: item.image_url}}>
           </Card>
         </TouchableOpacity>
         <Modal
@@ -102,29 +95,32 @@ export default class Recipes extends Component{
               Alert.alert('Modal has been closed.');
           }}>
           <View style={styles.containerStyle}>
-            <View style={{alignItems: 'left', paddingLeft: 15}}>
+            {/* <View style={{alignItems: 'left', paddingLeft: 10}}> */}
               <Icon
                 onPress={() => { this.setRecipeModalVisible(false); }}
-                size={24}
+                size={10}
+                reverse
+                raised
                 name='x'
                 type='octicon'
+                color="white"
+                iconStyle={{color: "black", fontSize:14}}
               />
-            </View>
-            {/* <View style={{maxHeight: Dimensions.get('window').height * 0.9, flex: 1}}> */}
-              <Card
-                title={this.getTitle()}
-                style={{ justifyContent: 'center' }}
-                containerStyle={{maxHeight: Dimensions.get('window').height * 0.9, flex: 1}}
-                image={{uri: this.state.recipeDetails.image_url}}
-                >
-                <Text style={{fontWeight: 'bold', fontSize: 16}} containerStyle={{height: 25, marginBottom: 20}}>Ingredients:</Text>
-                <FlatList
-                  data={this.state.recipeDetails.ingredients}
-                  keyExtractor={(item, index) => index.toString()}
-                  ItemSeparatorComponent={this.renderSeparator}
-                  extraData={this.state}
-                  renderItem={({item, index}) => this.renderRow(item, index)}/>
-              </Card>
+            {/* </View> */}
+            <Card
+              title={this.getTitle()}
+              style={{ justifyContent: 'center' }}
+              containerStyle={{maxHeight: Dimensions.get('window').height * 0.9, flex: 1}}
+              image={{uri: this.state.recipeDetails.image_url}}
+              >
+              <Text style={{fontWeight: 'bold', fontSize: 16}} containerStyle={{height: 25, marginBottom: 20}}>Ingredients:</Text>
+              <FlatList
+                data={this.state.recipeDetails.ingredients}
+                keyExtractor={(item, index) => index.toString()}
+                ItemSeparatorComponent={this.renderSeparator}
+                extraData={this.state}
+                renderItem={({item, index}) => this.renderRow(item, index)}/>
+            </Card>
           </View>
         </Modal>
       </View>
@@ -204,7 +200,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   listItem: {
-    maxWidth: Dimensions.get('window').width /2,
+    maxWidth: Dimensions.get('window').width,
+    maxHeight: Dimensions.get('window').width,
     flex:0.5,
     borderRadius: 4,
   },
