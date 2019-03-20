@@ -321,7 +321,6 @@ export default class MainInventory extends Component {
           <FlatList
             data={this.state.data[this.state.selectedLocation]}
             keyExtractor={(item, index) => index.toString()}
-            ItemSeparatorComponent={this.renderSeparator}
             extraData={this.state}
             renderItem={({ item, index }) => this.renderCard(item, index)}
           />
@@ -345,47 +344,41 @@ export default class MainInventory extends Component {
                 Alert.alert('Modal has been closed.');
             }}>
             <View style={styles.containerStyle}>
-                <View style={{flex: 1,
-                    position: 'absolute',
-                    bottom:60,
-                    left:SCREEN_WIDTH * 0.41 - 100}}>
-                <Icon
-                    onPress={() => { Actions.shoppingList(); this.setButtonModalVisible(false); }}
-                    reverse
-                    raised
-                    size={24}
-                    name='list-unordered'
-                    type='octicon'
-                    color='#457ABE'
-                />
+                <View style={{flex: 1, position: 'absolute', bottom:60, alignItems: 'center', left: SCREEN_WIDTH * 0.41 - 100}}>
+                  <Icon
+                      onPress={() => { Actions.shoppingList(); this.setButtonModalVisible(false); }}
+                      reverse
+                      raised
+                      size={24}
+                      name='list-unordered'
+                      type='octicon'
+                      color='#457ABE'
+                  />
+                  <Text style={styles.iconLabels}>Shopping List</Text>
                 </View>
-                <View style={{flex: 1,
-                    position: 'absolute',
-                    bottom:100,
-                    left:SCREEN_WIDTH * 0.41}}>
-                <Icon
-                    onPress={() => { this.setAddModalVisible(true); this.setButtonModalVisible(false); }}
-                    reverse
-                    raised
-                    size={24}
-                    name='plus'
-                    type='octicon'
-                    color='#457ABE'
-                />
+                <View style={{flex: 1, position: 'absolute', bottom:100, alignItems: 'center', left: SCREEN_WIDTH * 0.41}}>
+                  <Icon
+                      onPress={() => { this.setAddModalVisible(true); this.setButtonModalVisible(false); }}
+                      reverse
+                      raised
+                      size={24}
+                      name='plus'
+                      type='octicon'
+                      color='#457ABE'
+                  />
+                  <Text style={styles.iconLabels}>Add Item</Text>
                 </View>
-                <View style={{flex: 1,
-                    position: 'absolute',
-                    bottom:60,
-                    left:SCREEN_WIDTH * 0.41 + 100}}>
-                <Icon
-                    onPress={() => { Actions.recipes(); this.setButtonModalVisible(false); }}
-                    reverse
-                    raised
-                    size={24}
-                    name='silverware-fork-knife'
-                    type='material-community'
-                    color='#457ABE'
-                />
+                <View style={{flex: 1, position: 'absolute', bottom:60, alignItems: 'center', left:SCREEN_WIDTH * 0.41 + 100}}>
+                  <Icon
+                      onPress={() => { Actions.recipes(); this.setButtonModalVisible(false); }}
+                      reverse
+                      raised
+                      size={24}
+                      name='silverware-fork-knife'
+                      type='material-community'
+                      color='#457ABE'
+                  />
+                  <Text style={styles.iconLabels}>Recipes</Text>
                 </View>
                 <View style={styles.footerButton}>
                 <Icon
@@ -466,7 +459,7 @@ const styles = StyleSheet.create({
   footerButton: {
     flex: 1,
     position: 'absolute',
-    bottom:0,
+    bottom:10,
     left:SCREEN_WIDTH * 0.41,
   },
   buttonGroup: {
@@ -524,5 +517,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     backgroundColor: '#457ABE'
+  },
+  iconLabels: {
+    color: 'white',
+    textAlign: 'center'
   }
 });
