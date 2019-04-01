@@ -29,16 +29,14 @@ export const passwordChanged = (text) => {
 
 export const loginUser = ({ email, password }) => {
   return (dispatch) => {
+    console.log(email);
+    console.log(password);
     dispatch({ type: LOGIN_USER });
-
+    console.log("now trying to log in!");
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(user => loginUserSuccess(dispatch, user))
       .catch((error) => {
-        console.log(error);
-
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(user => loginUserSuccess(dispatch, user))
-        .catch(() => loginUserFail(dispatch));
+        console.log("This is the issue: " + error);
       });
   };
 };
@@ -51,6 +49,50 @@ export const createUser = ({ email, password }) => {
       .catch((error) => {
         console.log(error);
       });
+    const uID = firebase.auth().currentUser.uid;      
+    console.log(uID);
+    firebase.database().ref(uID + "/Location/Freezer/example/").set({
+      Barcode: "001",
+      Expiration_Date: "12/31/9999",
+      Input_Date: "05/22/1997",
+      Name: "Vanilla Ice Cream",
+      Quantity: "1"
+    });
+    firebase.database().ref(uID + "/Location/Freezer/example1/").set({
+      Barcode: "001",
+      Expiration_Date: "12/31/9999",
+      Input_Date: "05/22/1997",
+      Name: "Chocolate Ice Cream",
+      Quantity: "1"
+    });
+    firebase.database().ref(uID + "/Location/Fridge/example/").set({
+      Barcode: "001",
+      Expiration_Date: "12/31/9999",
+      Input_Date: "05/22/1997",
+      Name: "Milk",
+      Quantity: "1"
+    });firebase.database().ref(uID + "/Location/Fridge/example2/").set({
+      Barcode: "001",
+      Expiration_Date: "12/31/9999",
+      Input_Date: "05/22/1997",
+      Name: "Chocolate Milk",
+      Quantity: "1"
+    });
+    firebase.database().ref(uID + "/Location/Pantry/example/").set({
+      Barcode: "001",
+      Expiration_Date: "12/31/9999",
+      Input_Date: "05/22/1997",
+      Name: "Spicy Potatoes",
+      Quantity: "12"
+    });
+    firebase.database().ref(uID + "/Location/Pantry/example2/").set({
+      Barcode: "001",
+      Expiration_Date: "12/31/9999",
+      Input_Date: "05/22/1997",
+      Name: "Cinnamon Potatoes",
+      Quantity: "12"
+    });
+    Actions.mainInventory();
   };
 };
 
@@ -93,15 +135,18 @@ const doFacebookLogin = async dispatch => {
 
 
 const loginUserFail = (dispatch) => {
+  console.log("whoops");
   dispatch({ type: LOGIN_USER_FAIL });
 };
 
 const loginUserSuccess = (dispatch, user) => {
+  console.log("Yay you're in!!")
   AsyncStorage.setItem(user);
+  console.log("We are here!")
   dispatch({
     type: LOGIN_USER_SUCCESS,
     payload: user
   });
-
+  
   Actions.mainInventory();
 };
