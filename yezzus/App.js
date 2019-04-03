@@ -11,12 +11,12 @@ import Router from './src/Router';
 class App extends Component {
   componentWillMount() {
     const config = {
-      apiKey: "AIzaSyB53_w0lzMMMBkZ2RPWxC0MkIwD8-9L3ng",
-      authDomain: "mykitchen-f7bee.firebaseapp.com",
-      databaseURL: "https://mykitchen-f7bee.firebaseio.com",
-      projectId: "mykitchen-f7bee",
-      storageBucket: "mykitchen-f7bee.appspot.com",
-      messagingSenderId: "297688074849"
+      apiKey: "AIzaSyBkBMkUfNGLp7kg9VCdmcSK5f2pq8K1FRI",
+      authDomain: "yeesusfreezus.firebaseapp.com",
+      databaseURL: "https://yeesusfreezus.firebaseio.com",
+      projectId: "yeesusfreezus",
+      storageBucket: "yeesusfreezus.appspot.com",
+      messagingSenderId: "812965187828"
     };
     firebase.initializeApp(config);  
   }
