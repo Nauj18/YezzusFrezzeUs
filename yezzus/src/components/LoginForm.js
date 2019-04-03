@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground } from 'react-native';
+import { View, Text, ImageBackground, Image, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Button, Input, SocialIcon } from 'react-native-elements';
@@ -64,15 +64,16 @@ class LoginForm extends Component {
         style={{ height: '100%', width: '100%', resizeMethod: 'scale' }}
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text
-          style={{ fontSize: 50, fontWeight: 'bold', color: 'white', fontFamily: 'Zapfino' }}
-          onPress={Actions.mainInventory}
-          >
-          myKitchen
-          </Text>
+          <TouchableHighlight onPress={Actions.mainInventory}>
+            <Image
+            source={require('../../assets/myKitchen.png')}
+            style={{ height: 120 }}
+            resizeMode='contain'
+            />
+          </TouchableHighlight>
           <Input
             label="Email"
-            placeholder="email@gmail.com"
+            placeholder="pineapple@gmail.com"
             leftIcon={{ type: 'entypo', name: 'email' }}
             onChangeText={this.onEmailChange.bind(this)}
             value={this.props.email}
@@ -134,9 +135,9 @@ const styles = {
 const mapStateToProps = ({ auth }) => {
   const { email, password, error } = auth;
 
-  return { email, password, error, token: auth.token };
+  return { email, password, error };
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser, facebookLogin
+  emailChanged, passwordChanged, loginUser
 })(LoginForm);

@@ -55,7 +55,7 @@ export const createUser = ({ email, password }) => {
 };
 
 export const facebookLogin = () => async dispatch => {
-    // const token = await AsyncStorage.getItem('fb_token');
+    const token = await AsyncStorage.getItem('fb_token');
     //
     // if (token) {
     // // Dispatch an action saying FB login is done
@@ -97,7 +97,6 @@ const loginUserFail = (dispatch) => {
 };
 
 const loginUserSuccess = (dispatch, user) => {
-  AsyncStorage.setItem(user);
   dispatch({
     type: LOGIN_USER_SUCCESS,
     payload: user
