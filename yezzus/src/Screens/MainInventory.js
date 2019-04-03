@@ -60,116 +60,200 @@ export default class MainInventory extends Component {
     });
     this.setState({ fontLoaded: true });
 
-
-    this.fetchData();
+    //Grab all info from firebase
+    await this.fetchData();
   }
 
-  fetchData = async() => {
-    const uID = "EG7FlCM9hxPMX27WcMuoYFtcG8u1";
-    //const uID = firebase.auth().currentUser.uid;
-    console.log("The uID is: " + uID);
+  async fetchData() {
+    const uID = firebase.auth().currentUser.uid;
+    //console.log("The uID is: " + uID);
 
-    const data = {
+    const fdata = {
       fridge: [],
       freezer: [],
       pantry: []
     };
 
-    //So this first firebase.database()... grabs the list of items at the specified location (Fridge, Freezer, Pantry)
-    //Then it goes through each item in the list
-    const arryName = [];
-    const arryExpDt = [];
-    const arryQty = [];
-    await firebase.database().ref().child(uID + "/Location/Fridge").once("value", snapshot => {
+    /***********************************************
+     *This is where the fridge inventory is filled
+     ***********************************************/
+    const fridgeArryName = [];
+    const fridgeArryExpDt = [];
+    const fridgeArryQty = [];
+    firebase.database().ref().child(uID + "/Location/Fridge").once("value", snapshot => {
       const Firebasedata = snapshot.val()
-        if (Firebasedata) {
-          
-          //Grabs the name of all the items
-          Object.keys(Firebasedata).forEach(fridgeItem =>
-            firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Name").once("value", snapshot => {
-              const nameData = snapshot.val();
-              console.log(nameData);
-              arryName.push(nameData);
-              //console.log("This should continously add the items: " + arryName);
-              this.setState( { litName: arryName });
-              console.log("Printing the item names: " + this.state.litName);
-            })
-          );
-          
-          
-          //Grabs the expiration date for all items
-          Object.keys(Firebasedata).forEach(fridgeItem =>
-            firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Expiration_Date").once("value", snapshot => {
-              const expData = snapshot.val();
-              console.log(expData);
-              arryExpDt.push(expData);
-            })
-          );
-          this.setState( { litExpDate: arryExpDt });
-          console.log("Printing the expDate: " + this.state.litExpDate);
-          
-          //Grabs the QTY information for all items
-          Object.keys(Firebasedata).forEach(fridgeItem =>
-            firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Quantity").once("value", snapshot => {
-              const expQty = snapshot.val();
-              console.log(expQty);              
-              arryQty.push(expQty);
-            })
-          );
-          this.setState( { litQty: arryQty });
-          console.log("Printing the quantity: " + this.state.litQty); 
+      if (Firebasedata) {
+
+        //Grabs the name of all the items
+        Object.keys(Firebasedata).forEach(fridgeItem =>
+          firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Name").once("value", snapshot => {
+            const nameData = snapshot.val();
+            //console.log(nameData);
+            fridgeArryName.push(nameData);
+            //console.log("This should continously add the items: " + arryName);
+            // this.setState({
+            //   litName: fridgeArryName
+            // });
+            //console.log("Printing the item names: " + this.state.litName);
+          })
+        );
+
+        //Grabs the expiration date for all items
+        Object.keys(Firebasedata).forEach(fridgeItem =>
+          firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Expiration_Date").once("value", snapshot => {
+            const expData = snapshot.val();
+            //console.log(expData);
+            fridgeArryExpDt.push(expData);
+            // this.setState({
+            //   litExpDate: fridgeArryExpDt
+            // });
+          })
+        );
+
+        //Grabs the QTY information for all items
+        Object.keys(Firebasedata).forEach(fridgeItem =>
+          firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Quantity").once("value", snapshot => {
+            const expQty = snapshot.val();
+            //console.log(expQty);
+            fridgeArryQty.push(expQty);
+            // this.setState({
+            //   litQty: fridgeArryQty
+            // });
+          })
+        );
+        for (var i = 0; i < fridgeArryName.length; i++) {
+          fdata.fridge.push({
+            name: fridgeArryName[i],
+            expDate: fridgeArryExpDt[i],
+            quantity: fridgeArryQty[i]
+          });
         }
+
+      }
     });
-    console.log("I imagine this runs after the await " + this.state.litName);
-    // console.log("We have left the method now!");
-    // console.log("Outside the method: " + this.state.firebaseItem);
 
-    //Some extra goup that may be useable but idk
-    // data.fridge.push({ 
-            //   name: (firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Name").once("value", snapshot => {})), 
-            //   expDate: (firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Expiration_Date")),
-            //   quantity: (firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Quantity"))
-            // })
-
+    /***********************************************
+     *This is where the freezer inventory is filled
+     ***********************************************/
+    const freezerArryName = [];
+    const freezerArryExpDt = [];
+    const freezerArryQty = [];
     firebase.database().ref().child(uID + "/Location/Freezer").once("value", snapshot => {
       const Firebasedata = snapshot.val()
-        if (snapshot.val()) {
-          Object.keys(Firebasedata).forEach(fridgeItem => data.freezer.push({ name: fridgeItem.Name, expDate: fridgeItem.Expiration_Date, quantity: fridgeItem.Quantity }));
+      if (Firebasedata) {
+
+        //Grabs the name of all the items
+        Object.keys(Firebasedata).forEach(freezerItem =>
+          firebase.database().ref().child(uID + "/Location/Freezer/" + freezerItem + "/Name").once("value", snapshot => {
+            const nameData = snapshot.val();
+            //console.log(nameData);
+            freezerArryName.push(nameData);
+            // this.setState({
+            //   litName: freezerArryName
+            // });
+          })
+        );
+
+        //Grabs the expiration date for all items
+        Object.keys(Firebasedata).forEach(freezerItem =>
+          firebase.database().ref().child(uID + "/Location/Freezer/" + freezerItem + "/Expiration_Date").once("value", snapshot => {
+            const expData = snapshot.val();
+            //console.log(expData);
+            freezerArryExpDt.push(expData);
+            // this.setState({
+            //   litExpDate: freezerArryExpDt
+            // });
+          })
+        );
+
+        //Grabs the QTY information for all items
+        Object.keys(Firebasedata).forEach(freezerItem =>
+          firebase.database().ref().child(uID + "/Location/Freezer/" + freezerItem + "/Quantity").once("value", snapshot => {
+            const expQty = snapshot.val();
+            //console.log(expQty);
+            freezerArryQty.push(expQty);
+            // this.setState({
+            //   litQty: freezerArryQty
+            // });
+          })
+        );
+
+        //This loops through the array of names and assigns each a value
+        for (var i = 0; i < freezerArryName.length; i++) {
+          fdata.freezer.push({
+            name: freezerArryName[i],
+            expDate: freezerArryExpDt[i],
+            quantity: freezerArryQty[i]
+          });
         }
+      }
     });
+
+    /***********************************************
+     *This is where the pantry inventory is filled
+     ***********************************************/
+    const pantryArryName = [];
+    const pantryArryExpDt = [];
+    const pantryArryQty = [];
     firebase.database().ref().child(uID + "/Location/Pantry").once("value", snapshot => {
       const Firebasedata = snapshot.val()
-        if (snapshot.val()) {
-          Object.keys(Firebasedata).forEach(fridgeItem => data.pantry.push({ name: fridgeItem.Name, expDate: fridgeItem.Expiration_Date, quantity: fridgeItem.Quantity }));
+      if (Firebasedata) {
+
+        //Grabs the name of all the items
+        Object.keys(Firebasedata).forEach(pantryItem =>
+          firebase.database().ref().child(uID + "/Location/Pantry/" + pantryItem + "/Name").once("value", snapshot => {
+            const nameData = snapshot.val();
+            //console.log(nameData);
+            pantryArryName.push(nameData);
+            //console.log("This should continously add the items: " + arryName);
+            // this.setState({
+            //   litName: pantryArryName
+            // });
+            //console.log("Printing the item names: " + this.state.litName);
+          })
+        );
+
+        //Grabs the expiration date for all items
+        Object.keys(Firebasedata).forEach(pantryItem =>
+          firebase.database().ref().child(uID + "/Location/Pantry/" + pantryItem + "/Expiration_Date").once("value", snapshot => {
+            const expData = snapshot.val();
+            //console.log(expData);
+            pantryArryExpDt.push(expData);
+            // this.setState({
+            //   litExpDate: pantryArryExpDt
+            // });
+          })
+        );
+
+        //Grabs the QTY information for all items
+        Object.keys(Firebasedata).forEach(pantryItem =>
+          firebase.database().ref().child(uID + "/Location/Pantry/" + pantryItem + "/Quantity").once("value", snapshot => {
+            const expQty = snapshot.val();
+            //console.log(expQty);
+            pantryArryQty.push(expQty);
+            // this.setState({
+            //   litQty: pantryArryQty
+            // });
+          })
+        );
+        for (var i = 0; i < pantryArryName.length; i++) {
+          fdata.pantry.push({
+            name: pantryArryName[i],
+            expDate: pantryArryExpDt[i],
+            quantity: pantryArryQty[i]
+          });  
         }
+        console.log("Curious to see what data looks like rn");
+        console.log(fdata);
+      }
     });
 
-    this.setState({ data });
     
-    
-    
-    
-    
-    
-    
-    
-    
-    // const data = {
-    //     fridge: [],
-    //     freezer: [],
-    //     pantry: []
-    // };
 
-    // Items.Location.Fridge.forEach(element => {
-    //   data.fridge.push({ name: element.Name, expDate: element.Expiration_Date, quantity: element.Quantity });
-    // });
-    // Items.Location.Freezer.forEach(element => {
-    //     data.freezer.push({ name: element.Name, expDate: element.Expiration_Date, quantity: element.Quantity });
-    //   });
-    // Items.Location.Pantry.forEach(element => {
-    //   data.pantry.push({ name: element.Name, expDate: element.Expiration_Date, quantity: element.Quantity });
-    // });
-    // this.setState({ data });
+    this.setState({
+      data: fdata
+    });
+
   }
 
   setEditModalVisible(editModalVisible, item, itemIndex) {
@@ -285,8 +369,8 @@ export default class MainInventory extends Component {
     this.setState({data});
   }
 
-  renderCard(item, index){
-    const swipeButtons = [{
+  renderCard(item, index) {
+      const swipeButtons = [{
         text: 'Delete',
         backgroundColor: 'red',
         onPress: () => {

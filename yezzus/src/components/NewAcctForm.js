@@ -69,7 +69,7 @@ class NewAcctForm extends Component {
 
   render() {
     const { goBack } = this.props.navigation;
-    console.log(this.state.fontLoaded);
+    //console.log(this.state.fontLoaded);
     return (
       <ImageBackground
       source={require('../../assets/foodies.jpg')}

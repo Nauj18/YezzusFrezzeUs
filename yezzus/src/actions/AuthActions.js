@@ -135,14 +135,11 @@ const doFacebookLogin = async dispatch => {
 
 
 const loginUserFail = (dispatch) => {
-  console.log("whoops");
   dispatch({ type: LOGIN_USER_FAIL });
 };
 
 const loginUserSuccess = (dispatch, user) => {
-  console.log("Yay you're in!!")
   AsyncStorage.setItem(user);
-  console.log("We are here!")
   dispatch({
     type: LOGIN_USER_SUCCESS,
     payload: user
