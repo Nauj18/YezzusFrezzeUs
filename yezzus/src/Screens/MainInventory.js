@@ -53,14 +53,13 @@ export default class MainInventory extends Component {
     this.setState({selectedIndex, selectedLocation})
   }
 
-  async componentDidMount() {
-    //Font load
+  async componentWillMount(){
     await Font.loadAsync({
       'Helvetica': require('../../assets/fonts/Helvetica.ttf'),
     });
-    this.setState({ fontLoaded: true });
 
-    //Grab all info from firebase
+    this.setState({ fontLoaded: true });
+    
     await this.fetchData();
   }
 
