@@ -16,6 +16,19 @@ export default class ViewInventory extends Component {
     this.fetchData();
   }
 
+  writeUserData({ name, expDate, quantity }) => {
+    const Ref = firebase.database().ref().push();
+    const key = Ref.key();
+
+    const newItem={
+      id: key,
+      name: name,
+      Expiration_Date: expDate,
+      Quantity: quantity
+    }
+    Ref.push(newItem);
+  }
+
   fetchData = async() => {
     const data = [];
     Items.Location.Fridge.forEach(element => {
