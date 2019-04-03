@@ -3,15 +3,17 @@ import { StyleSheet, View, FlatList, Text, Modal, Alert, Dimensions, TouchableOp
 import { Header, Icon, Button, Input, Card, ButtonGroup, ListItem} from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import Swipeout from 'react-native-swipeout';
-import moment from 'moment'
+import moment from 'moment';
+import { Font } from 'expo';
 import Items from './Inventory/Items.json';
+import firebase from 'firebase';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default class MainInventory extends Component {
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
         selectedIndex: 1,
         selectedLocation: "fridge",
@@ -22,9 +24,15 @@ export default class MainInventory extends Component {
         addModalVisible: false,
         buttonModalVisible: false,
         itemIndex: 0,
+        firebaseItem: [],
         addedItem: { name: '', quantity: '', expDate: '' },
+        litName: [],
+        litExpDate: [],
+        litQty: [],
+        fontLoaded: false,
     }
     this.updateIndex = this.updateIndex.bind(this)
+    
   }
 
   updateIndex (selectedIndex) {
@@ -45,26 +53,207 @@ export default class MainInventory extends Component {
     this.setState({selectedIndex, selectedLocation})
   }
 
-  componentWillMount(){
-    this.fetchData();
+  async componentDidMount() {
+    //Font load
+    await Font.loadAsync({
+      'Helvetica': require('../../assets/fonts/Helvetica.ttf'),
+    });
+    this.setState({ fontLoaded: true });
+
+    //Grab all info from firebase
+    await this.fetchData();
   }
 
-  fetchData = async() => {
-    const data = {
-        fridge: [],
-        freezer: [],
-        pantry: []
+  async fetchData() {
+    const uID = firebase.auth().currentUser.uid;
+    //console.log("The uID is: " + uID);
+
+    const fdata = {
+      fridge: [],
+      freezer: [],
+      pantry: []
     };
-    Items.Location.Fridge.forEach(element => {
-      data.fridge.push({ name: element.Name, expDate: element.Expiration_Date, quantity: element.Quantity });
+
+    /***********************************************
+     *This is where the fridge inventory is filled
+     ***********************************************/
+    const fridgeArryName = [];
+    const fridgeArryExpDt = [];
+    const fridgeArryQty = [];
+    firebase.database().ref().child(uID + "/Location/Fridge").once("value", snapshot => {
+      const Firebasedata = snapshot.val()
+      if (Firebasedata) {
+
+        //Grabs the name of all the items
+        Object.keys(Firebasedata).forEach(fridgeItem =>
+          firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Name").once("value", snapshot => {
+            const nameData = snapshot.val();
+            //console.log(nameData);
+            fridgeArryName.push(nameData);
+            //console.log("This should continously add the items: " + arryName);
+            // this.setState({
+            //   litName: fridgeArryName
+            // });
+            //console.log("Printing the item names: " + this.state.litName);
+          })
+        );
+
+        //Grabs the expiration date for all items
+        Object.keys(Firebasedata).forEach(fridgeItem =>
+          firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Expiration_Date").once("value", snapshot => {
+            const expData = snapshot.val();
+            //console.log(expData);
+            fridgeArryExpDt.push(expData);
+            // this.setState({
+            //   litExpDate: fridgeArryExpDt
+            // });
+          })
+        );
+
+        //Grabs the QTY information for all items
+        Object.keys(Firebasedata).forEach(fridgeItem =>
+          firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Quantity").once("value", snapshot => {
+            const expQty = snapshot.val();
+            //console.log(expQty);
+            fridgeArryQty.push(expQty);
+            // this.setState({
+            //   litQty: fridgeArryQty
+            // });
+          })
+        );
+        for (var i = 0; i < fridgeArryName.length; i++) {
+          fdata.fridge.push({
+            name: fridgeArryName[i],
+            expDate: fridgeArryExpDt[i],
+            quantity: fridgeArryQty[i]
+          });
+        }
+
+      }
     });
-    Items.Location.Freezer.forEach(element => {
-        data.freezer.push({ name: element.Name, expDate: element.Expiration_Date, quantity: element.Quantity });
-      });
-    Items.Location.Pantry.forEach(element => {
-      data.pantry.push({ name: element.Name, expDate: element.Expiration_Date, quantity: element.Quantity });
+
+    /***********************************************
+     *This is where the freezer inventory is filled
+     ***********************************************/
+    const freezerArryName = [];
+    const freezerArryExpDt = [];
+    const freezerArryQty = [];
+    firebase.database().ref().child(uID + "/Location/Freezer").once("value", snapshot => {
+      const Firebasedata = snapshot.val()
+      if (Firebasedata) {
+
+        //Grabs the name of all the items
+        Object.keys(Firebasedata).forEach(freezerItem =>
+          firebase.database().ref().child(uID + "/Location/Freezer/" + freezerItem + "/Name").once("value", snapshot => {
+            const nameData = snapshot.val();
+            //console.log(nameData);
+            freezerArryName.push(nameData);
+            // this.setState({
+            //   litName: freezerArryName
+            // });
+          })
+        );
+
+        //Grabs the expiration date for all items
+        Object.keys(Firebasedata).forEach(freezerItem =>
+          firebase.database().ref().child(uID + "/Location/Freezer/" + freezerItem + "/Expiration_Date").once("value", snapshot => {
+            const expData = snapshot.val();
+            //console.log(expData);
+            freezerArryExpDt.push(expData);
+            // this.setState({
+            //   litExpDate: freezerArryExpDt
+            // });
+          })
+        );
+
+        //Grabs the QTY information for all items
+        Object.keys(Firebasedata).forEach(freezerItem =>
+          firebase.database().ref().child(uID + "/Location/Freezer/" + freezerItem + "/Quantity").once("value", snapshot => {
+            const expQty = snapshot.val();
+            //console.log(expQty);
+            freezerArryQty.push(expQty);
+            // this.setState({
+            //   litQty: freezerArryQty
+            // });
+          })
+        );
+
+        //This loops through the array of names and assigns each a value
+        for (var i = 0; i < freezerArryName.length; i++) {
+          fdata.freezer.push({
+            name: freezerArryName[i],
+            expDate: freezerArryExpDt[i],
+            quantity: freezerArryQty[i]
+          });
+        }
+      }
     });
-    this.setState({ data });
+
+    /***********************************************
+     *This is where the pantry inventory is filled
+     ***********************************************/
+    const pantryArryName = [];
+    const pantryArryExpDt = [];
+    const pantryArryQty = [];
+    firebase.database().ref().child(uID + "/Location/Pantry").once("value", snapshot => {
+      const Firebasedata = snapshot.val()
+      if (Firebasedata) {
+
+        //Grabs the name of all the items
+        Object.keys(Firebasedata).forEach(pantryItem =>
+          firebase.database().ref().child(uID + "/Location/Pantry/" + pantryItem + "/Name").once("value", snapshot => {
+            const nameData = snapshot.val();
+            //console.log(nameData);
+            pantryArryName.push(nameData);
+            //console.log("This should continously add the items: " + arryName);
+            // this.setState({
+            //   litName: pantryArryName
+            // });
+            //console.log("Printing the item names: " + this.state.litName);
+          })
+        );
+
+        //Grabs the expiration date for all items
+        Object.keys(Firebasedata).forEach(pantryItem =>
+          firebase.database().ref().child(uID + "/Location/Pantry/" + pantryItem + "/Expiration_Date").once("value", snapshot => {
+            const expData = snapshot.val();
+            //console.log(expData);
+            pantryArryExpDt.push(expData);
+            // this.setState({
+            //   litExpDate: pantryArryExpDt
+            // });
+          })
+        );
+
+        //Grabs the QTY information for all items
+        Object.keys(Firebasedata).forEach(pantryItem =>
+          firebase.database().ref().child(uID + "/Location/Pantry/" + pantryItem + "/Quantity").once("value", snapshot => {
+            const expQty = snapshot.val();
+            //console.log(expQty);
+            pantryArryQty.push(expQty);
+            // this.setState({
+            //   litQty: pantryArryQty
+            // });
+          })
+        );
+        for (var i = 0; i < pantryArryName.length; i++) {
+          fdata.pantry.push({
+            name: pantryArryName[i],
+            expDate: pantryArryExpDt[i],
+            quantity: pantryArryQty[i]
+          });  
+        }
+        console.log("Curious to see what data looks like rn");
+        console.log(fdata);
+      }
+    });
+
+    
+
+    this.setState({
+      data: fdata
+    });
+
   }
 
   setEditModalVisible(editModalVisible, item, itemIndex) {
@@ -180,8 +369,8 @@ export default class MainInventory extends Component {
     this.setState({data});
   }
 
-  renderCard(item, index){
-    const swipeButtons = [{
+  renderCard(item, index) {
+      const swipeButtons = [{
         text: 'Delete',
         backgroundColor: 'red',
         onPress: () => {
@@ -268,22 +457,27 @@ export default class MainInventory extends Component {
 
     return (
       <View style={styles.container}>
-        <Header
-          centerComponent={{ text: 'INVENTORY',
-            style: {
-              color: '#fff',
-              fontSize: 20,
-              fontWeight: 'bold',
-              fontFamily: 'Helvetica'
-            }
-          }}
-          rightComponent={{ icon: 'settings', color: '#fff', onPress: () => Actions.settings() }}
-          containerStyle={{
-            height: 85,
-            justifyContent: 'space-around',
-            backgroundColor: '#457ABE'
-          }}
-        />
+        {
+          this.state.fontLoaded ? (
+            <Header
+              centerComponent={{ text: 'INVENTORY',
+              style: {
+                color: '#fff',
+                fontSize: 20,
+                fontWeight: 'bold',
+                fontFamily: 'Helvetica'
+              }
+              }}
+              rightComponent={{ icon: 'settings', color: '#fff', onPress: () => Actions.settings() }}
+              containerStyle={{
+                height: 85,
+                justifyContent: 'space-around',
+                backgroundColor: '#457ABE'
+              }}
+            />
+          ) : null
+        }
+        
         <View
         style={{
           flexDirection: 'row',

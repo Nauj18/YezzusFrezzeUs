@@ -11,15 +11,14 @@ import Router from './src/Router';
 class App extends Component {
   componentWillMount() {
     const config = {
-      apiKey: 'AIzaSyBkBMkUfNGLp7kg9VCdmcSK5f2pq8K1FRI',
-      authDomain: 'yeesusfreezus.firebaseapp.com',
-      databaseURL: 'https://yeesusfreezus.firebaseio.com',
-      projectId: 'yeesusfreezus',
-      storageBucket: 'yeesusfreezus.appspot.com',
-      messagingSenderId: '812965187828'
+      apiKey: "AIzaSyBkBMkUfNGLp7kg9VCdmcSK5f2pq8K1FRI",
+      authDomain: "yeesusfreezus.firebaseapp.com",
+      databaseURL: "https://yeesusfreezus.firebaseio.com",
+      projectId: "yeesusfreezus",
+      storageBucket: "yeesusfreezus.appspot.com",
+      messagingSenderId: "812965187828"
     };
-
-  firebase.initializeApp(config);
+    firebase.initializeApp(config);  
   }
   render() {
     return (
