@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground } from 'react-native';
+import { Font } from 'expo';
+import { View, Text, ImageBackground, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Button, Input, SocialIcon } from 'react-native-elements';
@@ -11,6 +12,10 @@ import {
 } from '../actions';
 
 class LoginForm extends Component {
+  state = {
+    fontLoaded: false,
+  };
+
   onEmailChange(text) {
     this.props.emailChanged(text);
   }
@@ -25,6 +30,13 @@ class LoginForm extends Component {
     this.props.loginUser({ email, password });
   }
 
+  async componentDidMount() {
+    await Font.loadAsync({
+      'Zapfino': require('../../assets/fonts/Zapfino.ttf'),
+    });
+
+    this.setState({ fontLoaded: true });
+  }
 
   renderButton() {
     return (
@@ -63,13 +75,16 @@ class LoginForm extends Component {
         source={require('../../assets/foodies.jpg')}
         style={{ height: '100%', width: '100%', resizeMethod: 'scale' }}
       >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text
-          style={{ fontSize: 50, fontWeight: 'bold', color: 'white', fontFamily: 'Zapfino' }}
-          onPress={Actions.mainInventory}
-          >
-          myKitchen
-          </Text>
+        <KeyboardAvoidingView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} behavior="padding">
+          { this.state.fontLoaded ? ( 
+            <Text
+              style={{ fontSize: 50, fontWeight: 'bold', color: 'white', fontFamily: 'Zapfino' }}
+              onPress={Actions.mainInventory}
+            >
+              myKitchen
+            </Text> 
+            ) : null }
+          
           <Input
             label="Email"
             placeholder="email@gmail.com"
@@ -117,7 +132,7 @@ class LoginForm extends Component {
           >
             Create Account
           </Text>
-        </View>
+        </KeyboardAvoidingView>
       </ImageBackground>
     );
   }

@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground } from 'react-native';
+import { View, Text, ImageBackground, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, Input } from 'react-native-elements';
 import { emailChanged, passwordChanged, createUser } from '../actions';
+import { Actions } from 'react-native-router-flux';
+import { Font } from 'expo';
 
 class NewAcctForm extends Component {
+  state = {
+    fontLoaded: false,
+  };
+
   onEmailChange(text) {
     this.props.emailChanged(text);
   }
@@ -15,8 +21,17 @@ class NewAcctForm extends Component {
 
   onButtonPress() {
     const { email, password } = this.props;
-
+    console.log(email + " & " + password);
     this.props.createUser({ email, password });
+    Actions.goBack;
+  }
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      'Noteworthy': require('../../assets/fonts/Noteworthy-Lt.ttf'),
+    });
+
+    this.setState({ fontLoaded: true });
   }
 
 
@@ -35,6 +50,7 @@ class NewAcctForm extends Component {
         marginTop: 15
        }}
       onPress={this.onButtonPress.bind(this)}
+      
       />
     );
   }
@@ -53,18 +69,20 @@ class NewAcctForm extends Component {
 
   render() {
     const { goBack } = this.props.navigation;
-
+    //console.log(this.state.fontLoaded);
     return (
       <ImageBackground
       source={require('../../assets/foodies.jpg')}
       style={{ height: '100%', width: '100%' }}
       >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text
-          style={{ fontSize: 50, fontWeight: 'bold', color: 'white', fontFamily: 'Noteworthy-Bold' }}
-          >
-          Create User
-          </Text>
+        <KeyboardAvoidingView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} behavior="padding">
+          { this.state.fontLoaded ? (
+            <Text
+              style={{ fontSize: 50, fontWeight: 'bold', color: 'white', fontFamily: 'Noteworthy' }}
+            >
+              Create User
+            </Text>
+          ) : null }
           <Input
             label="Full Name"
             placeholder="John Doe"
@@ -111,7 +129,7 @@ class NewAcctForm extends Component {
           }}
           onPress={() => goBack()}
           />
-        </View>
+        </KeyboardAvoidingView>
       </ImageBackground>
     );
   }
