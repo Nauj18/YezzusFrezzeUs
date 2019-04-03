@@ -45,8 +45,8 @@ export default class MainInventory extends Component {
     this.setState({selectedIndex, selectedLocation})
   }
 
-  componentWillMount(){
-    this.fetchData();
+  async componentWillMount(){
+    await this.fetchData();
   }
 
   fetchData = async() => {
