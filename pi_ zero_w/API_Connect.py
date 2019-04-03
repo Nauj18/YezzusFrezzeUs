@@ -1,5 +1,6 @@
 import json
 import requests
+import datetime
 from firebase import firebase
 import csv
 
@@ -16,12 +17,11 @@ import csv
 
 baseUrl = "https://world.openfoodfacts.org/api/v0/product/"
 firebase = firebase.FirebaseApplication('https://yeesusfreezus.firebaseio.com/', None)
+#uniqueItemID = 1
 
-dates = []
-barcodes = []
-
-UP
-
+################################################################################
+## TODO: Agree on CSV file format
+################################################################################
 def readCSVFile(dates,barcodes):
     with open('barcodes.csv') as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
@@ -31,24 +31,53 @@ def readCSVFile(dates,barcodes):
             else:
                 dates.append(row[0])
                 barcodes.append(row[1])
+            #uniqueItemID+=1
 
-
-#hardoded for testing, comment out later!
-barcode = "737628064502"
-uID = '03xQBYKBLFMhgEheyNTPFtV4LUi2'
-
-
-def getBarcodeInfo():
+def getBarcodeInfo(barcode):
     r = requests.get(url=baseUrl+barcode+'json?print=pretty')
     productData = r.json()
+    #uniqueItemID+=1
+
+    for item in productData:
+        if(item=='product'):
+            for item2 in productData['product']:
+                #print(item2)
+                if(item2 == 'generic_name'):
+                    name = productData['product']['generic_name']
+                    #print(name)
+                if(item2 == 'quantity'):
+                    quantity = productData['product']['quantity']
+                    #print(quantity)
+                if(item2 == 'expiration_date'):
+                    experation = productData['product']['expiration_date']
+                    #print(experation)
+
+    
+
+    return {'Barcode':barcode,'Expiration_Date':experation,'Input_Date': datetime.datetime.now(),'Name':name,'Quantity':quantity}
+
+
 
 
 def getFirebase():
     result = firebase.get('',None)
     print (result)
 
-################################################################################
-## TODO: get Json Information and post it to firebase with the right format
-################################################################################
-def postFirebase():
-    firebase.put('',+uID+'Location/Freezer/'+dates,barcode)
+def postFirebase(path,data):
+    firebase.put('',path,data)
+    
+#hardoded for testing, comment out later!
+barcode = '737628064502'
+uniqueItemID = '1'
+location = 1
+
+if(location==1):
+    path = 'Location/Freezer/'+ uniqueItemID
+elif(location==2):
+    path = 'Location/Fridge/'+ uniqueItemID
+elif(location==3):
+    path = 'Location/Pantry/'+ uniqueItemID
+
+#readCSVFile()
+
+postFirebase(path,getBarcodeInfo(barcode))
