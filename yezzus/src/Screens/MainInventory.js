@@ -54,6 +54,12 @@ export default class MainInventory extends Component {
   }
 
   async componentWillMount(){
+    await Font.loadAsync({
+      'Helvetica': require('../../assets/fonts/Helvetica.ttf'),
+    });
+
+    this.setState({ fontLoaded: true });
+    
     await this.fetchData();
   }
 
