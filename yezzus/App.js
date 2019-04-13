@@ -16,8 +16,7 @@ class App extends Component {
       storageBucket: 'yeesusfreezus.appspot.com',
       messagingSenderId: '812965187828'
     };
-
-  firebase.initializeApp(config);
+    firebase.initializeApp(config);
   }
   render() {
     const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));

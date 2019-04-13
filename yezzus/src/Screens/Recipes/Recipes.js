@@ -1,104 +1,41 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, StyleSheet, TextInput, Image, View, ActivityIndicator, FlatList, TouchableOpacity, Modal, Dimensions, Picker } from 'react-native';
+import { Text, StyleSheet, View, FlatList, TouchableOpacity, Picker, Modal, Linking, Dimensions } from 'react-native';
 import { Icon, Button, Header, Card, Avatar } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import Items from '../Inventory/Items.json';
+import { foodFridgeFetch, foodPantryFetch, foodFreezerFetch } from '../../actions';
 
 // const API_KEY = '6aa6eba8b0845d9c2db7f1f140732050';
 const API_KEY = '84e7f1ece3be429157e54ec9cda3ec54'
-
-const items = [
-  {
-    name: 'Freezer',
-    id: 0,
-    children: [{
-        name: 'Apple',
-        id: 10,
-      }, {
-        name: 'Strawberry',
-        id: 17,
-      }, {
-        name: 'Pineapple',
-        id: 13,
-      }, {
-        name: 'Banana',
-        id: 14,
-      }, {
-        name: 'Watermelon',
-        id: 15,
-      }, {
-        name: 'Kiwi fruit',
-        id: 16,
-      }]
-  },
-  {
-    name: 'Fridge',
-    id: 1,
-    children: [{
-        name: 'Quartz',
-        id: 20,
-      }, {
-        name: 'Zircon',
-        id: 21,
-      }, {
-        name: 'Sapphire',
-        id: 22,
-      }, {
-        name: 'Topaz',
-        id: 23,
-      }]
-  },
-  {
-    name: 'Pantry',
-    id: 2,
-    children: [{
-        name: 'Mother In Law\'s Tongue',
-        id: 30,
-      }, {
-        name: 'Yucca',
-        id: 31,
-      }, {
-        name: 'Monsteria',
-        id: 32,
-      }, {
-        name: 'Palm',
-        id: 33,
-      }]
-  },
-]
 
 export default class Recipes extends Component{
 
   state = {
     data: [],
     recipes: [],
-    recipeDetails: [],
+    recipeDetails : [],
     selectedRecipe: [],
     selectedItems: [],
+    selectedSort: 'r',
     filterType: '',
+    inventoryData:[],
     recipeModalVisible: false,
+    ingredientsModalVisible: true,
   };
 
-  componentWillMount() {
-    const params = { query: 'chicken%20breast,spinach', sort: 'r' }
-    this.fetchData(params);
+  componentWillMount(){
+    let params = {query: 'chicken%20breast,spinach', sort: 'r'}
+    this.fetchInventoryData(params);
   }
 
   fetchData = async(params) => {
-    // Random Name API
-    // const response = await fetch('https://randomuser.me/api?results=21');
-    // const json = await response.json();
-    // let data = [];
-    // json.results.forEach(element => {
-    //   data.push({name: `${element.name.first} ${element.name.last}`})
-    // });
-    // console.log(data)
-    // this.setState({ data });
-
     // Recipe API
-    const recipeResults = await fetch(`https://www.food2fork.com/api/search?key=${API_KEY}&q=${params.query}&sort=${params.sort}`)
+    let query = this.getItems();
+
+    const recipeResults = await fetch(`https://www.food2fork.com/api/search?key=${API_KEY}&q=${query}&sort=${this.state.selectedSort}`)
     const json = await recipeResults.json();
-    const recipes = [];
+    let recipes = [];
     json.recipes.forEach(element => {
       recipes.push(element)
     })
@@ -112,13 +49,38 @@ export default class Recipes extends Component{
     this.setState({ recipeDetails: recipeDetails.recipe });
   }
 
+  fetchInventoryData = async(item) => {
+    const data = [];
+    let id = 3;
+    let children = [];
+
+    Items.Location.Fridge.forEach(element => {
+      children.push({ name: element.Name, id: id });
+      id++;
+    });
+    data.push({ name: 'Fridge', id: 0, children: children });
+    children = [];
+    Items.Location.Freezer.forEach(element => {
+      children.push({ name: element.Name, id: id });
+      id++;
+    });
+    data.push({ name: 'Freezer', id: 1, children: children });
+    children = [];
+    Items.Location.Pantry.forEach(element => {
+      children.push({ name: element.Name, id: id });
+      id++;
+    });
+    data.push({ name: 'Pantry', id: 2, children: children });
+    this.setState({ inventoryData: data });
+  }
+
   setRecipeModalVisible(recipeModalVisible) {
     this.setState({ recipeModalVisible });
   }
 
-  onSelectedItemsChange = (selectedItems) => {
-  this.setState({ selectedItems });
-}
+  setIngredientsModalVisible(ingredientsModalVisible) {
+    this.setState({ ingredientsModalVisible });
+  }
 
   renderSeparator() {
     return <View style={styles.separator} />
@@ -133,8 +95,29 @@ export default class Recipes extends Component{
     )
   }
 
+  onSelectedItemsChange = (selectedItems) => {
+    this.setState({ selectedItems });
+  }
+
   getTitle(){
     return(this.state.recipeDetails.title)
+  }
+
+  getItems(){
+    let itemNames = '';
+    let elements = [];
+    this.state.inventoryData.forEach(element => {
+      element.children.forEach(child => {
+        elements.push(child);
+      });
+    });
+    this.state.selectedItems.forEach(item => {
+      elements.forEach(element => {
+        if (element.id === item)
+          itemNames = itemNames + element.name + ",";
+      });
+    });
+    return itemNames;
   }
 
   renderCard(item, index){
@@ -143,8 +126,9 @@ export default class Recipes extends Component{
         <TouchableOpacity onPress={() => { this.fetchRecipeDetails(item); this.setRecipeModalVisible(true);  }} >
           <Card
             title={item.title}
-            titleStyle={{ fontSize: 12 }}
-            image={{ uri: item.image_url }} />
+            titleStyle={{fontSize: 12}}
+            image={{uri: item.image_url}}>
+          </Card>
         </TouchableOpacity>
         <Modal
           animationType="fade"
@@ -169,16 +153,32 @@ export default class Recipes extends Component{
             <Card
               title={this.getTitle()}
               style={{ justifyContent: 'center' }}
-              containerStyle={{maxHeight: Dimensions.get('window').height * 0.9, flex: 1}}
               image={{uri: this.state.recipeDetails.image_url}}
               >
-              <Text style={{fontWeight: 'bold', fontSize: 16}} containerStyle={{height: 25, marginBottom: 20}}>Ingredients:</Text>
-              <FlatList
-                data={this.state.recipeDetails.ingredients}
-                keyExtractor={(item, index) => index.toString()}
-                ItemSeparatorComponent={this.renderSeparator}
-                extraData={this.state}
-                renderItem={({item, index}) => this.renderRow(item, index)}/>
+              <View>
+                <Text style={{fontWeight: 'bold', fontSize: 16}} containerStyle={{height: 25, marginBottom: 20}}>Ingredients:</Text>
+                <FlatList
+                  data={this.state.recipeDetails.ingredients}
+                  keyExtractor={(item, index) => index.toString()}
+                  ItemSeparatorComponent={this.renderSeparator}
+                  extraData={this.state}
+                  renderItem={({item, index}) => this.renderRow(item, index)}/>
+              </View>
+              <Icon
+                onPress={() => Linking.openURL(`${this.state.recipeDetails.source_url}`) }
+                containerStyle={{
+                  alignItems:'flex-end',
+                  paddingLeft: 6,
+                  paddingTop: 5
+                }}
+                size={15}
+                reverse
+                raised
+                name='link-external'
+                type='octicon'
+                color="white"
+                iconStyle={{color: "black", fontSize:14}}
+              />
             </Card>
           </View>
         </Modal>
@@ -201,24 +201,61 @@ export default class Recipes extends Component{
               fontFamily: 'Helvetica'
             }
           }}
-          rightComponent={{ icon: 'search', color: '#fff' }}
+          rightComponent={{ icon: 'search', color: '#fff', onPress:() => { this.setIngredientsModalVisible(true);}}}
           containerStyle={{
             height: 85,
             justifyContent: 'space-around',
             backgroundColor: '#457ABE'
           }}
         />
-        <SectionedMultiSelect
-          items={items}
-          uniqueKey='id'
-          subKey='children'
-          iconKey='icon'
-          selectText='Choose some things...'
-          showDropDowns={true}
-          readOnlyHeadings={true}
-          onSelectedItemsChange={this.onSelectedItemsChange}
-          selectedItems={this.state.selectedItems}
-        />
+        <Modal
+            animationType="fade"
+            transparent
+            visible={this.state.ingredientsModalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+            }}
+          >
+            <View style={styles.containerStyle}>
+              <Card
+              title="SELECT ITEMS"
+              style={{ justifyContent: 'center' }}
+              >
+              <View>
+                <SectionedMultiSelect
+                  items={this.state.inventoryData}
+                  uniqueKey='id'
+                  subKey='children'
+                  iconKey='icon'
+                  selectText='Choose Ingredients...'
+                  showDropDowns={true}
+                  readOnlyHeadings={true}
+                  onSelectedItemsChange={this.onSelectedItemsChange}
+                  selectedItems={this.state.selectedItems}
+                />
+                </View>
+              <Button
+                onPress={() => {
+                  this.setIngredientsModalVisible(false);
+                  this.fetchData();
+                }}
+                title='SEARCH'
+                titleStyle={{ fontSize: 20 }}
+                buttonStyle={styles.buttonStyle}
+              />
+              <Text
+                style={{
+                    textAlign: 'center',
+                    fontSize: 20,
+                    textDecorationLine: 'underline',
+                    paddingTop: 10
+                }}
+                onPress={() => this.setIngredientsModalVisible(false)}>
+                Cancel
+              </Text>
+              </Card>
+            </View>
+          </Modal>
           <View style={styles.list}>
           <FlatList
             data={this.state.recipes}
@@ -267,7 +304,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     position: 'relative',
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   image: {
     flex: 1,
@@ -289,5 +326,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     backgroundColor: '#457ABE'
-  }
+  },
+  linkButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    bottom:10,
+  },
 });
