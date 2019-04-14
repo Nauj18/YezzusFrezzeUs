@@ -3,6 +3,8 @@ import { AppRegistry, ScrollView, Picker, StyleSheet, View, FlatList, Text, Text
 import { Header, CheckBox, Icon, Button, Input, Card, ButtonGroup, ListItem} from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import Swipeout from 'react-native-swipeout';
+import { Font } from 'expo';
+import firebase from 'firebase';
 import Items from './ShoppingList.json';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -17,20 +19,37 @@ export default class MainInventory extends Component {
         quantityModalVisible: false,
         addModalVisible: false,
         itemIndex: 0,
-        addedItem: {name: "", quantity: ""},
+        addedItem: {name: "", quantity: "", key: ""},
+        fontLoaded: false,
+        uID: '',
     }
   }
 
-  componentWillMount(){
-    this.fetchData();
+  async componentWillMount(){
+    await Font.loadAsync({
+      'Helvetica': require('../../../assets/fonts/Helvetica.ttf'),
+    });
+
+    this.setState({ fontLoaded: true });
+    await this.fetchData();
   }
 
-  fetchData = async() => {
-    const data = [];
-    Items.ShoppingList.forEach(element => {
-        data.push({ name: element.Name, quantity: element.Quantity})
+  async fetchData() {
+    const uID = firebase.auth().currentUser.uid;
+    this.setState({ uID });
+    let data = [];
+    await firebase.database().ref().child(uID + "/ShoppingList").once("value", snapshot => {
+      const fbData = snapshot.val();
+      if (fbData) {
+        Object.keys(fbData).forEach(item =>
+          firebase.database().ref().child(uID + "/ShoppingList/" + item).once("value", snapshot => {
+            const nameData = snapshot.val();
+            data.push({ name: nameData.Name, quantity: nameData.Quantity, key: item});
+            this.setState({ data });
+          })
+        );
+      }
     });
-    this.setState({ data });
   }
 
   setQuantityModalVisible(quantityModalVisible, itemIndex) {
@@ -63,12 +82,18 @@ export default class MainInventory extends Component {
     let data = this.state.data;
     data[index].name = newItem;
     this.setState({ data });
+    firebase.database().ref(this.state.uID + "/ShoppingList/" + data[index].key + "/").update({
+      Name: `${newItem}`,
+    });
   }
 
   quantityChanged(val, index){
-      let data = this.state.data;
-      data[index].quantity = val;
-      this.setState({ data })
+    let data = this.state.data;
+    data[index].quantity = val;
+    this.setState({ data })
+    firebase.database().ref(this.state.uID + "/ShoppingList/" + data[index].key + "/").update({
+      Quantity: `${val}`,
+    });
   }
 
   clearChecked(){
@@ -77,7 +102,10 @@ export default class MainInventory extends Component {
       let ind = 0;
 
       for (let i = 0; i < checked.length; i++){
-        if(checked[i] == true) data.splice(ind, 1);
+        if(checked[i] == true){
+          firebase.database().ref(this.state.uID + "/ShoppingList/" + data[ind].key + "/").remove();
+          data.splice(ind, 1);
+        }
         else ind++
       }
       this.setState({ data, checked:[] });
@@ -86,12 +114,19 @@ export default class MainInventory extends Component {
   deleteItem(item, index){
     let data = this.state.data;
     let checked = this.state.checked;
+    firebase.database().ref(this.state.uID + "/ShoppingList/" + data[index].key + "/").remove();
     data.splice(index, 1);
     checked.splice(index, 1);
     this.setState({ data, checked });
   }
 
-  addNewItem() {
+  async addNewItem() {
+    await firebase.database().ref(this.state.uID + "/ShoppingList/").push({
+      Name: `${this.state.addedItem.name}`,
+      Quantity: `${this.state.addedItem.quantity}`
+    }).then((result)=>{
+      this.state.addedItem.key = result.key;
+    });
     let data = [];
     data.push(this.state.addedItem);
     this.state.data.forEach(element => {
@@ -235,10 +270,10 @@ export default class MainInventory extends Component {
                 onChangeText={this.addItemQuantityChanged.bind(this)}
                 />
                 <Button
-                    onPress={() => {
-                        this.setAddModalVisible(false);
-                        this.addNewItem();
-                        this.setState({addedItem: {name: "", quantity: ""}});
+                    onPress={async () => {
+                      this.setAddModalVisible(false);
+                      await this.addNewItem();
+                      this.setState({addedItem: {name: "", quantity: "", key: ""}});
                     }}
                     title='ADD'
                     titleStyle={{ fontSize: 20 }}
