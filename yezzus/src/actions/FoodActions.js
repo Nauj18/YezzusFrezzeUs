@@ -18,7 +18,7 @@ export const foodUpdate = ({ prop, value }) => {
   *This is where the Fridge items are Created*
  ***********************************************/
 export const foodFridgeCreate = ({ name, exp, quantity }) => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return (dispatch) => {
   firebase.database().ref(`/${currentUser.uid}/Location/Fridge`)
@@ -34,7 +34,7 @@ export const foodFridgeCreate = ({ name, exp, quantity }) => {
   *This is where the Freezer items are Created*
  ***********************************************/
 export const foodFreezerCreate = ({ name, exp, quantity }) => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return (dispatch) => {
   firebase.database().ref(`/${currentUser.uid}/Location/Freezer`)
@@ -50,7 +50,7 @@ export const foodFreezerCreate = ({ name, exp, quantity }) => {
   *This is where the Pantry items are Created*
  ***********************************************/
 export const foodPantryCreate = ({ name, exp, quantity }) => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return (dispatch) => {
   firebase.database().ref(`/${currentUser.uid}/Location/Pantry`)
@@ -67,7 +67,7 @@ export const foodPantryCreate = ({ name, exp, quantity }) => {
   *This is where the Fridge items are fetched*
  ***********************************************/
 export const foodFridgeFetch = () => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return (dispatch) => {
     firebase.database().ref(`/${currentUser.uid}/Location/Fridge`)
@@ -82,7 +82,7 @@ export const foodFridgeFetch = () => {
   *This is where the Pantry items are fetched*
  ***********************************************/
 export const foodPantryFetch = () => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return (dispatch) => {
     firebase.database().ref(`/${currentUser.uid}/Location/Pantry`)
@@ -96,7 +96,7 @@ export const foodPantryFetch = () => {
   *This is where the Freezer items are fetched*
  ***********************************************/
 export const foodFreezerFetch = () => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return (dispatch) => {
     firebase.database().ref(`/${currentUser.uid}/Location/Freezer`)
@@ -110,7 +110,7 @@ export const foodFreezerFetch = () => {
     *This is where the Pantry items are Saved*
  ***********************************************/
 export const foodPantrySave = ({ name, exp, quantity, uid }) => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return (dispatch) => {
     firebase.database().ref(`/${currentUser.uid}/Location/Pantry/${uid}`)
@@ -126,7 +126,7 @@ export const foodPantrySave = ({ name, exp, quantity, uid }) => {
     *This is where the Freezer items are Saved*
  ***********************************************/
 export const foodFreezerSave = ({ name, exp, quantity, uid }) => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return (dispatch) => {
     firebase.database().ref(`/${currentUser.uid}/Location/Freezer/${uid}`)
@@ -142,7 +142,7 @@ export const foodFreezerSave = ({ name, exp, quantity, uid }) => {
     *This is where the Fridge items are Saved*
  ***********************************************/
 export const foodFridgeSave = ({ name, exp, quantity, uid }) => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return (dispatch) => {
     firebase.database().ref(`/${currentUser.uid}/Location/Fridge/${uid}`)
@@ -158,7 +158,7 @@ export const foodFridgeSave = ({ name, exp, quantity, uid }) => {
     *This is where a Fridge item is Deleted*
  ***********************************************/
 export const foodFridgeDelete = ({ uid }) => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return () => {
     firebase.database().ref(`/${currentUser.uid}//Location/Fridge/${uid}`)
@@ -173,7 +173,7 @@ export const foodFridgeDelete = ({ uid }) => {
     *This is where a Pantry item is Deleted*
  ***********************************************/
 export const foodPantryDelete = ({ uid }) => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return () => {
     firebase.database().ref(`/${currentUser.uid}//Location/Pantry/${uid}`)
@@ -188,7 +188,7 @@ export const foodPantryDelete = ({ uid }) => {
     *This is where a Freezer item is Deleted*
  ***********************************************/
 export const foodFreezerDelete = ({ uid }) => {
-  const { currentUser } = firebase.auth();
+  const { currentUser } = firebase.auth().currentUser.uid;
 
   return () => {
     firebase.database().ref(`/${currentUser.uid}//Location/Freezer/${uid}`)

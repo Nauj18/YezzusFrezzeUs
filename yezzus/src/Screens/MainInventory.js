@@ -16,7 +16,7 @@ export default class MainInventory extends Component {
     super(props)
     this.state = {
         selectedIndex: 1,
-        selectedLocation: "fridge",
+        selectedLocation: "Fridge",
         data: {},
         item: {},
         editedItem: {},
@@ -39,13 +39,13 @@ export default class MainInventory extends Component {
     let selectedLocation = "";
     switch(selectedIndex){
         case 0:
-            selectedLocation = "freezer";
+            selectedLocation = "Freezer";
             break;
         case 1:
-            selectedLocation = "fridge";
+            selectedLocation = "Fridge";
             break;
         case 2:
-            selectedLocation = "pantry";
+            selectedLocation = "Pantry";
             break;
         default:
             break;
@@ -61,12 +61,14 @@ export default class MainInventory extends Component {
     this.setState({ fontLoaded: true });
 
     //Grab all info from firebase
+    // const uID = 
+    // console.log("this worked! " + uID);
     await this.fetchData();
   }
 
   async fetchData() {
-    const uID = firebase.auth().currentUser.uid;
-    //console.log("The uID is: " + uID);
+    const uID = await firebase.auth().currentUser.uid;
+    console.log("Hi Davis! The uID is: " + uID);
 
     const fdata = {
       fridge: [],
@@ -88,16 +90,18 @@ export default class MainInventory extends Component {
         Object.keys(Firebasedata).forEach(fridgeItem =>
           firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Name").once("value", snapshot => {
             const nameData = snapshot.val();
-            //console.log(nameData);
+            console.log(nameData);
             fridgeArryName.push(nameData);
-            //console.log("This should continously add the items: " + arryName);
             // this.setState({
             //   litName: fridgeArryName
             // });
             //console.log("Printing the item names: " + this.state.litName);
+
           })
         );
-
+        console.log("Hello davis here is the fridge array of names: ")
+        console.log(fridgeArryName);
+        
         //Grabs the expiration date for all items
         Object.keys(Firebasedata).forEach(fridgeItem =>
           firebase.database().ref().child(uID + "/Location/Fridge/" + fridgeItem + "/Expiration_Date").once("value", snapshot => {
@@ -345,13 +349,31 @@ export default class MainInventory extends Component {
   }
 
   addNewItem() {
-    let data = {fridge: [], freezer: [], pantry: []};
+    //let data = {Fridge: [], Freezer: [], Pantry: []};
     let location = this.state.selectedLocation;
-    data[location].push(this.state.addedItem);
-    this.state.data[location].forEach(element => {
-      data[location].push(element);
-    });
-    this.setState({ data });
+    let uID = firebase.auth().currentUser.uid;
+    //data[location].push(this.state.addedItem);
+    
+    //This is the firebase call to add a new item to the firebase!
+    const newItem = firebase.database().ref().child(uID + "/Location/" + location).push()
+    newItem.set(this.state.addedItem, () => this.setState({
+                                                            Name: this.state.addedItem.name,
+                                                            Expiration_Date: this.state.addedItem.expDate,
+                                                            Quantity: this.state.addedItem.quantity
+                                                          }))
+
+    // this.state.data[location].forEach(element => {
+    //   data[location].push(element);
+    // });
+    // this.setState({ data });
+
+
+    //This just resets the text box pretty much
+    let addedItem = this.state.addedItem;
+    addedItem.name = '';
+    addedItem.expDate = '';
+    addedItem.quantity = '';
+    this.setState({addedItem});
   }
 
   itemEdited(){
