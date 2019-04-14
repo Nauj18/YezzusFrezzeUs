@@ -65,7 +65,7 @@ export default class MainInventory extends Component {
 
   async fetchData() {
     const uID = firebase.auth().currentUser.uid;
-    //console.log("The uID is: " + uID);
+    console.log("The uID is: " + uID);
 
     const fdata = {
       fridge: [],

@@ -29,14 +29,14 @@ export const passwordChanged = (text) => {
 
 export const loginUser = ({ email, password }) => {
   return (dispatch) => {
-    console.log(email);
-    console.log(password);
     dispatch({ type: LOGIN_USER });
-    console.log("now trying to log in!");
+
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(user => loginUserSuccess(dispatch, user))
       .catch((error) => {
-        console.log("This is the issue: " + error);
+        console.log(error);
+
+        loginUserFail(dispatch);
       });
   };
 };
@@ -139,7 +139,7 @@ const loginUserFail = (dispatch) => {
 };
 
 const loginUserSuccess = (dispatch, user) => {
-  AsyncStorage.setItem(user);
+  //AsyncStorage.setItem(user);
   dispatch({
     type: LOGIN_USER_SUCCESS,
     payload: user
