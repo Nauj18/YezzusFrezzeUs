@@ -76,18 +76,18 @@ class LoginForm extends Component {
         style={{ height: '100%', width: '100%', resizeMethod: 'scale' }}
       >
         <KeyboardAvoidingView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} behavior="padding">
-          { this.state.fontLoaded ? ( 
+          { this.state.fontLoaded ? (
             <Text
               style={{ fontSize: 50, fontWeight: 'bold', color: 'white', fontFamily: 'Zapfino' }}
               onPress={Actions.mainInventory}
             >
               myKitchen
-            </Text> 
+            </Text>
             ) : null }
-          
+
           <Input
             label="Email"
-            placeholder="email@gmail.com"
+            placeholder="pineapple@gmail.com"
             leftIcon={{ type: 'entypo', name: 'email' }}
             onChangeText={this.onEmailChange.bind(this)}
             value={this.props.email}
@@ -149,9 +149,9 @@ const styles = {
 const mapStateToProps = ({ auth }) => {
   const { email, password, error } = auth;
 
-  return { email, password, error, token: auth.token };
+  return { email, password, error };
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser, facebookLogin
+  emailChanged, passwordChanged, loginUser
 })(LoginForm);

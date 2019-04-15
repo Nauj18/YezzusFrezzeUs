@@ -3,6 +3,7 @@ import { Text, StyleSheet, View, FlatList, TouchableOpacity, Picker, Modal, Link
 import { Icon, Button, Header, Card, Avatar } from 'react-native-elements';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import Items from '../Inventory/Items.json';
+import { foodFridgeFetch, foodPantryFetch, foodFreezerFetch } from '../../actions';
 
 // const API_KEY = '6aa6eba8b0845d9c2db7f1f140732050';
 const API_KEY = '84e7f1ece3be429157e54ec9cda3ec54'
@@ -323,7 +324,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 50,
     height: 50,
-    aspectRatio: 1.5, 
+    aspectRatio: 1.5,
     resizeMode: 'contain',
   },
   separator: {
