@@ -28,27 +28,28 @@ export const passwordChanged = (text) => {
 };
 
 export const loginUser = ({ email, password }) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch({ type: LOGIN_USER });
-
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    
+    await firebase.auth().signInWithEmailAndPassword(email, password)
       .then(user => loginUserSuccess(dispatch, user))
       .catch((error) => {
         console.log(error);
+
         loginUserFail(dispatch);
       });
   };
 };
 
 export const createUser = ({ email, password }) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch({ type: ACCT_MADE });
 
-    firebase.auth().createUserWithEmailAndPassword(email, password)
+    await firebase.auth().createUserWithEmailAndPassword(email, password)
       .catch((error) => {
         console.log(error);
       });
-    const uID = firebase.auth().currentUser.uid;
+    const uID = await firebase.auth().currentUser.uid;      
     console.log(uID);
     firebase.database().ref(uID + "/Location/Freezer/example/").set({
       Barcode: "001",
@@ -90,6 +91,11 @@ export const createUser = ({ email, password }) => {
       Input_Date: "05/22/1997",
       Name: "Cinnamon Potatoes",
       Quantity: "12"
+    });
+    firebase.database().ref(uID + "/ShoppingList/example/").set({
+      Name: "Apples",
+      Barcode: "0001",
+      Quantity: "1"
     });
     Actions.mainInventory();
   };
@@ -138,6 +144,7 @@ const loginUserFail = (dispatch) => {
 };
 
 const loginUserSuccess = (dispatch, user) => {
+  //AsyncStorage.setItem(user);
   dispatch({
     type: LOGIN_USER_SUCCESS,
     payload: user
