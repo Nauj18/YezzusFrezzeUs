@@ -180,12 +180,50 @@ export default class MainInventory extends Component {
   }
 
   deleteItem(item, index){
-    const list = this.state.data[this.state.selectedLocation];
+    let ddata = this.state.data;
+    let selectedLocation = this.state.selectedLocation;
+    let deleteKey = ddata[selectedLocation][index].key;
+    const list = ddata[selectedLocation];
+    console.log("This is the list: " + deleteKey);
     list.splice(index, 1);
     let data = this.state.data;
     data[this.state.selectedLocation] = list;
-
     this.setState({ data });
+
+    if (selectedLocation == 'fridge') {
+      selectedLocation = 'Fridge';
+    } else if (selectedLocation == 'freezer') {
+      selectedLocation = 'Freezer';
+    } else { selectedLocation = 'Pantry'; }
+
+    let uID = firebase.auth().currentUser.uid;
+    firebase.database().ref().child(uID + "/Location/" + selectedLocation + "/" + deleteKey).remove();
+  }
+
+  itemEdited(){
+    //Visual end of the update
+    let edata = this.state.data;
+    let selectedLocation = this.state.selectedLocation;
+    let editedItem = this.state.editedItem;
+    let itemKey = edata[selectedLocation][this.state.itemIndex].key;
+    console.log(itemKey);
+    edata[selectedLocation][this.state.itemIndex] = editedItem;
+    console.log(editedItem);
+    this.setState({ data: edata });
+
+    //firebase side
+    
+    if (selectedLocation == 'fridge') {
+      selectedLocation = 'Fridge';
+    } else if (selectedLocation == 'freezer') {
+      selectedLocation = 'Freezer';
+    } else { selectedLocation = 'Pantry'; }
+
+    let uID = firebase.auth().currentUser.uid;
+    firebase.database().ref().child(uID + "/Location/" + selectedLocation + "/" + itemKey + "/").update({
+      Name: editedItem.name, Quantity: editedItem.quantity, Expiration_Date: editedItem.expDate
+    });
+
   }
 
   addNewItem() {
@@ -223,31 +261,6 @@ export default class MainInventory extends Component {
     newItem.Expiration_Date = '';
     newItem.Quantity = '';
     this.setState({ addedItem: newItem });
-  }
-
-  itemEdited(){
-    //Visual end of the update
-    let edata = this.state.data;
-    let selectedLocation = this.state.selectedLocation;
-    let editedItem = this.state.editedItem;
-    let itemKey = edata[selectedLocation][this.state.itemIndex].key;
-    console.log(itemKey);
-    edata[selectedLocation][this.state.itemIndex] = editedItem;
-    this.setState({ data: edata });
-
-    //firebase side
-    
-    if (selectedLocation == 'fridge') {
-      selectedLocation = 'Fridge';
-    } else if (selectedLocation == 'freezer') {
-      selectedLocation = 'Freezer';
-    } else { selectedLocation = 'Pantry'; }
-
-    let uID = firebase.auth().currentUser.uid;
-    firebase.database().ref().child(uID + "/Location/" + selectedLocation + "/" + itemKey + "/").update({
-      Name: editedItem.name, Quantity: editedItem.qty, Expiration_Date: editedItem.expDate
-    });
-
   }
 
   renderCard(item, index) {
