@@ -25,7 +25,7 @@ export default class MainInventory extends Component {
         buttonModalVisible: false,
         itemIndex: 0,
         firebaseItem: [],
-        addedItem: { name: '', quantity: '', expDate: '' },
+        addedItem: { Name: '', Quantity: '', Expiration_Date: '' },
         litName: [],
         litExpDate: [],
         litQty: [],
@@ -53,7 +53,7 @@ export default class MainInventory extends Component {
     this.setState({selectedIndex, selectedLocation})
   }
 
-  async componentWillMount(){
+  async componentDidMount(){
     await Font.loadAsync({
       'Helvetica': require('../../assets/fonts/Helvetica.ttf'),
     });
@@ -87,7 +87,8 @@ export default class MainInventory extends Component {
                 firebase.database().ref().child(uID + "/Location/" + loc + "/" + fridgeItem).once("value", snapshot => {
                   const item = snapshot.val();
                   console.log(item)
-                  fdata[loc.toLowerCase()].push({ name: item.Name, quantity: item.Quantity, expDate: item.Expiration_Date });
+                  fdata[loc.toLowerCase()].push({ name: item.Name, quantity: item.Quantity, expDate: item.Expiration_Date, key: fridgeItem });
+                  //console.log(fdata);
                   this.setState({ data: fdata });
                 })
               );
@@ -109,19 +110,19 @@ export default class MainInventory extends Component {
 
   addItemNameChanged(name){
     let addedItem = this.state.addedItem;
-    addedItem.name = name;
+    addedItem.Name = name;
     this.setState({addedItem})
   }
 
   addItemQuantityChanged(quantity){
       let addedItem = this.state.addedItem;
-      addedItem.quantity = quantity;
+      addedItem.Quantity = quantity;
       this.setState({addedItem})
   }
 
   addItemExpDateChanged(expDate){
     let addedItem = this.state.addedItem;
-    addedItem.expDate = expDate;
+    addedItem.Expiration_Date = expDate;
     this.setState({addedItem})
   }
 
@@ -179,36 +180,87 @@ export default class MainInventory extends Component {
   }
 
   deleteItem(item, index){
-    const list = this.state.data[this.state.selectedLocation];
+    let ddata = this.state.data;
+    let selectedLocation = this.state.selectedLocation;
+    let deleteKey = ddata[selectedLocation][index].key;
+    const list = ddata[selectedLocation];
+    console.log("This is the list: " + deleteKey);
     list.splice(index, 1);
     let data = this.state.data;
     data[this.state.selectedLocation] = list;
-
     this.setState({ data });
+
+    if (selectedLocation == 'fridge') {
+      selectedLocation = 'Fridge';
+    } else if (selectedLocation == 'freezer') {
+      selectedLocation = 'Freezer';
+    } else { selectedLocation = 'Pantry'; }
+
+    let uID = firebase.auth().currentUser.uid;
+    firebase.database().ref().child(uID + "/Location/" + selectedLocation + "/" + deleteKey).remove();
+  }
+
+  itemEdited(){
+    //Visual end of the update
+    let edata = this.state.data;
+    let selectedLocation = this.state.selectedLocation;
+    let editedItem = this.state.editedItem;
+    let itemKey = edata[selectedLocation][this.state.itemIndex].key;
+    console.log(itemKey);
+    edata[selectedLocation][this.state.itemIndex] = editedItem;
+    console.log(editedItem);
+    this.setState({ data: edata });
+
+    //firebase side
+    
+    if (selectedLocation == 'fridge') {
+      selectedLocation = 'Fridge';
+    } else if (selectedLocation == 'freezer') {
+      selectedLocation = 'Freezer';
+    } else { selectedLocation = 'Pantry'; }
+
+    let uID = firebase.auth().currentUser.uid;
+    firebase.database().ref().child(uID + "/Location/" + selectedLocation + "/" + itemKey + "/").update({
+      Name: editedItem.name, Quantity: editedItem.quantity, Expiration_Date: editedItem.expDate
+    });
+
   }
 
   addNewItem() {
-    let data = {fridge: [], freezer: [], pantry: []};
+    let aData = this.state.data;
     let location = this.state.selectedLocation;
-    data[location].push(this.state.addedItem);
-    this.state.data[location].forEach(element => {
-      data[location].push(element);
-    });
-    this.setState({ data });
-  }
+    let newItem = this.state.addedItem;
 
-  itemEdited(){
-    let data = this.state.data;
-    let selectedLocation = this.state.selectedLocation;
-    data[selectedLocation][this.state.itemIndex] = this.state.editedItem;
-    this.setState({data});
-  }
 
-  itemEdited(){
-    let data = this.state.data;
-    let selectedLocation = this.state.selectedLocation;
-    data[selectedLocation][this.state.itemIndex] = this.state.editedItem;
-    this.setState({data});
+    let Locations = ""
+    if (location == 'fridge') {
+      Locations = 'Fridge';
+    } else if (location == 'freezer') {
+      Locations = 'Freezer';
+    } else { Locations = 'Pantry'; }
+
+
+    let uID = firebase.auth().currentUser.uid;
+    //This is the firebase call to add a new item to the firebase!
+    const newItems = firebase.database().ref().child(uID + "/Location/" + Locations).push()
+    newItems.set(this.state.addedItem, () => this.setState({
+      Name: newItem.Name,
+      Expiration_Date: newItem.Expiration_Date,
+      Quantity: newItem.Quantity
+    }))
+
+    //All of this just to get the item key so it can be edited after being made
+    let str = newItems.toString();
+    let lastSlash = str.lastIndexOf('/') + 1;
+    const resu = str.substring(lastSlash, str.length);
+    //This adds the item to the state
+    aData[location].push({ name: newItem.Name, quantity: newItem.Quantity, expDate: newItem.Expiration_Date, key: resu });
+    this.setState({ data: aData });
+    //This just resets the text box pretty much
+    newItem.Name = '';
+    newItem.Expiration_Date = '';
+    newItem.Quantity = '';
+    this.setState({ addedItem: newItem });
   }
 
   renderCard(item, index) {
@@ -443,19 +495,19 @@ export default class MainInventory extends Component {
                  <Input
                  label="Item"
                  placeholder="Pineapple"
-                 value={this.state.addedItem.name}
+                 value={this.state.addedItem.Name}
                  onChangeText={this.addItemNameChanged.bind(this)}
                  />
                  <Input
                  label="Quantity"
                  placeholder="100"
-                 value={this.state.addedItem.quantity}
+                 value={this.state.addedItem.Quantity}
                  onChangeText={this.addItemQuantityChanged.bind(this)}
                  />
                  <Input
                  label="Expiration Date"
                  placeholder="10/27/2029"
-                 value={this.state.addedItem.expDate}
+                 value={this.state.addedItem.Expiration_Date}
                  onChangeText={this.addItemExpDateChanged.bind(this)}
                  />
                  <Button

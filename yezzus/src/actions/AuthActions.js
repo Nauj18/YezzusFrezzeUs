@@ -67,7 +67,7 @@ export const createUser = ({ email, password }) => {
     });
     firebase.database().ref(uID + "/Location/Fridge/example/").set({
       Barcode: "001",
-      Expiration_Date: "12/31/9999",
+      Expiration_Date: "4/4/2019",
       Input_Date: "05/22/1997",
       Name: "Milk",
       Quantity: "1"
@@ -102,7 +102,7 @@ export const createUser = ({ email, password }) => {
 };
 
 export const facebookLogin = () => async dispatch => {
-    // const token = await AsyncStorage.getItem('fb_token');
+    const token = await AsyncStorage.getItem('fb_token');
     //
     // if (token) {
     // // Dispatch an action saying FB login is done
@@ -149,6 +149,6 @@ const loginUserSuccess = (dispatch, user) => {
     type: LOGIN_USER_SUCCESS,
     payload: user
   });
-  
+
   Actions.mainInventory();
 };
