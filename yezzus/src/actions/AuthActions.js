@@ -28,10 +28,10 @@ export const passwordChanged = (text) => {
 };
 
 export const loginUser = ({ email, password }) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch({ type: LOGIN_USER });
-
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    
+    await firebase.auth().signInWithEmailAndPassword(email, password)
       .then(user => loginUserSuccess(dispatch, user))
       .catch((error) => {
         console.log(error);
@@ -42,14 +42,14 @@ export const loginUser = ({ email, password }) => {
 };
 
 export const createUser = ({ email, password }) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch({ type: ACCT_MADE });
 
-    firebase.auth().createUserWithEmailAndPassword(email, password)
+    await firebase.auth().createUserWithEmailAndPassword(email, password)
       .catch((error) => {
         console.log(error);
       });
-    const uID = firebase.auth().currentUser.uid;      
+    const uID = await firebase.auth().currentUser.uid;      
     console.log(uID);
     firebase.database().ref(uID + "/Location/Freezer/example/").set({
       Barcode: "001",
@@ -67,7 +67,7 @@ export const createUser = ({ email, password }) => {
     });
     firebase.database().ref(uID + "/Location/Fridge/example/").set({
       Barcode: "001",
-      Expiration_Date: "12/31/9999",
+      Expiration_Date: "4/4/2019",
       Input_Date: "05/22/1997",
       Name: "Milk",
       Quantity: "1"
@@ -92,12 +92,17 @@ export const createUser = ({ email, password }) => {
       Name: "Cinnamon Potatoes",
       Quantity: "12"
     });
+    firebase.database().ref(uID + "/ShoppingList/example/").set({
+      Name: "Apples",
+      Barcode: "0001",
+      Quantity: "1"
+    });
     Actions.mainInventory();
   };
 };
 
 export const facebookLogin = () => async dispatch => {
-    // const token = await AsyncStorage.getItem('fb_token');
+    const token = await AsyncStorage.getItem('fb_token');
     //
     // if (token) {
     // // Dispatch an action saying FB login is done
@@ -144,6 +149,6 @@ const loginUserSuccess = (dispatch, user) => {
     type: LOGIN_USER_SUCCESS,
     payload: user
   });
-  
+
   Actions.mainInventory();
 };

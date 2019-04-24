@@ -13,14 +13,14 @@
                     "Name": "Eggs",
                     "Barcode": "0002",
                     "Input_Date": "1/29/19",
-                    "Expiration_Date": "2/28/19",
+                    "Expiration_Date": "3/20/19",
                     "Quantity": "12"
                 },
                 {
                     "Name": "Cheese",
                     "Barcode": "0001",
                     "Input_Date": "1/29/19",
-                    "Expiration_Date": "3/03/19",
+                    "Expiration_Date": "3/21/19",
                     "Quantity": "4"
                 },
                 {
