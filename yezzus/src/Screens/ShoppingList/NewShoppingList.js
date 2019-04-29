@@ -221,7 +221,7 @@ export default class MainInventory extends Component {
     return (
       <View style={styles.container}>
         <Header
-          leftComponent={{ icon: 'arrow-back', color: '#fff', onPress: () => goBack() }}
+          leftComponent={{ icon: 'kitchen', color: '#fff', onPress: () => goBack() }}
           centerComponent={{ text: 'SHOPPING LIST',
             style: {
               color: '#fff',

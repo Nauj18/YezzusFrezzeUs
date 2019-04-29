@@ -197,7 +197,7 @@ export default class Recipes extends Component{
     return (
       <View style={styles.container}>
         <Header
-          leftComponent={{ icon: 'arrow-back', color: '#fff', onPress: () => goBack() }}
+          leftComponent={{ icon: 'kitchen', color: '#fff', onPress: () => goBack() }}
           centerComponent={{ text: 'RECIPES',
             style: {
               color: '#fff',

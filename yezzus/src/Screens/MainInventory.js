@@ -362,7 +362,6 @@ export default class MainInventory extends Component {
                 fontFamily: 'Helvetica'
               }
               }}
-              rightComponent={{ icon: 'settings', color: '#fff', onPress: () => Actions.settings() }}
               containerStyle={{
                 height: 85,
                 justifyContent: 'space-around',
