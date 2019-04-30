@@ -226,6 +226,11 @@ export default class MainInventory extends Component {
 
   }
 
+  logOut() {
+    Actions.reset('auth');
+    firebase.auth().signOut();
+  }
+
   addNewItem() {
     let aData = this.state.data;
     let location = this.state.selectedLocation;
@@ -362,7 +367,7 @@ export default class MainInventory extends Component {
                 fontFamily: 'Helvetica'
               }
               }}
-              rightComponent={{ icon: 'settings', color: '#fff', onPress: () => Actions.settings() }}
+              rightComponent={{ text: 'Logout', color: '#fff', onPress: () => { Actions.reset('auth'); firebase.auth().signOut(); }}}
               containerStyle={{
                 height: 85,
                 justifyContent: 'space-around',
