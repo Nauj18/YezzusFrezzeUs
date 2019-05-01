@@ -3,34 +3,43 @@ import { Text, StyleSheet, View, FlatList, TouchableOpacity, Picker, Modal, Link
 import { Icon, Button, Header, Card, Avatar } from 'react-native-elements';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import Items from '../Inventory/Items.json';
-import { foodFridgeFetch, foodPantryFetch, foodFreezerFetch } from '../../actions';
+import firebase from 'firebase';
 
 // const API_KEY = '6aa6eba8b0845d9c2db7f1f140732050';
 const API_KEY = '84e7f1ece3be429157e54ec9cda3ec54'
 
 export default class Recipes extends Component{
 
-  state = {
-    data: [],
-    recipes: [],
-    recipeDetails : [],
-    selectedRecipe: [],
-    selectedItems: [],
-    selectedSort: 'r',
-    filterType: '',
-    inventoryData:[],
-    recipeModalVisible: false,
-    ingredientsModalVisible: true,
-    page: 1,
-    loading: false
-  };
+  constructor(props) {
+    super(props)
+    this.state = {
+      rdata: {},
+      data: {},
+      recipes: [],
+      recipeDetails: [],
+      selectedRecipe: [],
+      selectedItems: [],
+      selectedSort: 'r',
+      filterType: '',
+      inventoryData: [],
+      recipeModalVisible: false,
+      ingredientsModalVisible: true,
+      page: 1,
+      loading: false
+    };
+  }
 
-  componentWillMount(){
-    let params = {query: 'chicken%20breast,spinach', sort: 'r'}
+  componentWillMount() {
+    const params = { query: 'chicken%20breast,spinach', sort: 'r' }
+
     this.fetchInventoryData(params);
   }
 
-  fetchData = async() => { 
+  async componentDidMount(){
+    await this.fetchDatas();
+  }
+
+  fetchData = async() => {
     // Recipe API
     this.setState({ loading: true })
     let query = this.getItems();
@@ -47,6 +56,44 @@ export default class Recipes extends Component{
     this.setState({ loading: false })
   }
 
+  async fetchDatas() {
+    const uID = firebase.auth().currentUser.uid;
+    console.log("The uID is: " + uID);
+
+    const fdata = {
+      fridge: [],
+      freezer: [],
+      pantry: []
+    };
+
+    /***********************************************
+     *This is where the inventory is filled
+     ***********************************************/
+    firebase.database().ref().child(uID + "/Location/").once("value", snapshot => {
+      const locations = snapshot.val();
+      if (locations){
+        Object.keys(locations).forEach(loc =>
+          firebase.database().ref().child(uID + "/Location/" + loc).once("value", snapshot => {
+            const Firebasedata = snapshot.val();
+            // console.log(Firebasedata);
+            if (Firebasedata) {
+              Object.keys(Firebasedata).forEach(fridgeItem =>
+                firebase.database().ref().child(uID + "/Location/" + loc + "/" + fridgeItem).once("value", snapshot => {
+                  const item = snapshot.val();
+                  //console.log(item)
+                  fdata[loc.toLowerCase()].push({ name: item.Name, quantity: item.Quantity, expDate: item.Expiration_Date, key: fridgeItem });
+                  //console.log(fdata);
+                  this.setState({ data: fdata });
+                })
+              );
+            }
+          })
+        )
+      }
+    }
+);
+  }
+
   fetchRecipeDetails = async(item) => {
     const detailResults = await fetch(`https://www.food2fork.com/api/get?key=${API_KEY}&rId=${item.recipe_id}`)
     const recipeDetails = await detailResults.json();
@@ -54,29 +101,44 @@ export default class Recipes extends Component{
     this.setState({ recipeDetails: recipeDetails.recipe });
   }
 
-  fetchInventoryData = async(item) => {
-    const data = [];
+  fetchInventoryData = async() => {
+    const idata = [];
     let id = 3;
     let children = [];
 
     Items.Location.Fridge.forEach(element => {
-      children.push({ name: element.Name, id: id });
-      id++;
-    });
-    data.push({ name: 'Fridge', id: 0, children: children });
+    // firebase.database().ref(`/${uID}/Location/Fridge`)
+    // .on('value', snapshot => {
+    //   const Fridgedata = snapshot.val();
+    //   if (Fridgedata) {
+    //     Object.keys(Fridgedata).forEach(fridgeItem =>
+    //       firebase.database().ref().child(`/${uID}/Location/Fridge/${fridgeItem}`).on('value', snapshot => {
+    //         const item = snapshot.val();
+            children.push({ name: element.name, id: id });
+            // console.log(children);
+            id++;
+    //         this.setState({ fridgeData: children });
+    //       })
+    //     );
+    //   }
+    // });
+     });
+    idata.push({ name: 'Fridge', id: 0, children: children });
     children = [];
+
     Items.Location.Freezer.forEach(element => {
-      children.push({ name: element.Name, id: id });
+      children.push({ name: element.name, id: id });
       id++;
     });
-    data.push({ name: 'Freezer', id: 1, children: children });
+    idata.push({ name: 'Freezer', id: 1, children: children });
     children = [];
+
     Items.Location.Pantry.forEach(element => {
-      children.push({ name: element.Name, id: id });
+      children.push({ name: element.name, id: id });
       id++;
     });
-    data.push({ name: 'Pantry', id: 2, children: children });
-    this.setState({ inventoryData: data });
+    idata.push({ name: 'Pantry', id: 2, children: children });
+    this.setState({ inventoryData: idata });
   }
 
   setRecipeModalVisible(recipeModalVisible) {
