@@ -32,7 +32,7 @@ export default class MainInventory extends Component {
         fontLoaded: false,
     }
     this.updateIndex = this.updateIndex.bind(this)
-    
+
   }
 
   updateIndex (selectedIndex) {
@@ -59,7 +59,7 @@ export default class MainInventory extends Component {
     });
 
     this.setState({ fontLoaded: true });
-    
+
     await this.fetchData();
   }
 
@@ -87,9 +87,11 @@ export default class MainInventory extends Component {
                 firebase.database().ref().child(uID + "/Location/" + loc + "/" + fridgeItem).once("value", snapshot => {
                   const item = snapshot.val();
                   console.log(item)
-                  fdata[loc.toLowerCase()].push({ name: item.Name, quantity: item.Quantity, expDate: item.Expiration_Date, key: fridgeItem });
-                  //console.log(fdata);
-                  this.setState({ data: fdata });
+                  if(item.Name != undefined) {
+                    fdata[loc.toLowerCase()].push({ name: item.Name, quantity: item.Quantity, expDate: item.Expiration_Date, key: fridgeItem });
+                    //console.log(fdata);
+                    this.setState({ data: fdata });
+                  }
                 })
               );
             }
@@ -212,7 +214,7 @@ export default class MainInventory extends Component {
     this.setState({ data: edata });
 
     //firebase side
-    
+
     if (selectedLocation == 'fridge') {
       selectedLocation = 'Fridge';
     } else if (selectedLocation == 'freezer') {
@@ -376,7 +378,7 @@ export default class MainInventory extends Component {
             />
           ) : null
         }
-        
+
         <View
         style={{
           flexDirection: 'row',

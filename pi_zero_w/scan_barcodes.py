@@ -71,6 +71,11 @@ while True:
         # Check set and Add barcode data to CSV
         csv.write("{}, {}\n".format(datetime.datetime.now(), barcode_data))
         csv.flush()
+
+	# Get Pi's user ID from text file
+	uidfile = open("/home/pi/fridgeCode/MyKitchenpkg/userid.txt")
+	uid = uidfile.read().strip()
+	print(uid)
             
         ######################
         ## SEND API REQUEST
@@ -80,7 +85,7 @@ while True:
 
         # Post JSON version of item to firebase
         if food_item:
-            api_util.post_item(api_util.jsonify_item(food_item))
+            api_util.post_item(uid, api_util.jsonify_item(food_item))
         
         time.sleep(1.0)
 

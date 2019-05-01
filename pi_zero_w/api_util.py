@@ -39,32 +39,32 @@ def send_barcode_request(barcode):
 def jsonify_item(food_item):
     json_item = {}
     
-    json_item['name'] = food_item.name
-    json_item['expiration_date'] = food_item.expiration_date
-    json_item['quantity'] = food_item.quantity
+    json_item['Name'] = food_item.name
+    json_item['Expiration_Date'] = food_item.expiration_date
+    json_item['Quantity'] = food_item.quantity
     
-    if hasattr(food_item, 'ingredients'):
-        json_item['ingredients'] = food_item.ingredients
+    if hasattr(food_item, 'Ingredients'):
+        json_item['Ingredients'] = food_item.ingredients
         
     
-    if hasattr(food_item, 'allergies'):
-        json_item['allergies'] = food_item.allergies
+    if hasattr(food_item, 'Allergies'):
+        json_item['Allergies'] = food_item.allergies
         
             
-    if hasattr(food_item, 'image'):
-        json_item['image'] = food_item.image
+    if hasattr(food_item, 'Image'):
+        json_item['Image'] = food_item.image
         
             
-    if hasattr(food_item, 'categirues'):
-        json_item['ingredients'] = food_item.ingredients
+    #if hasattr(food_item, 'Categories'):
+    #    json_item['Categories'] = food_item.categories
         
             
-    if hasattr(food_item, 'ingredients'):
-        json_item['ingredients'] = food_item.ingredients
+    #if hasattr(food_item, 'Nutriments'):
+    #    json_item['Nutriments'] = food_item.nutriments
         
             
-    if hasattr(food_item, 'ingredients'):
-        json_item['ingredients'] = food_item.ingredients
+    #if hasattr(food_item, 'Nutrient_Levels'):
+    #    json_item['Nutrient_Levels'] = food_item.nutrient_levels
         
     return json_item
 
@@ -94,9 +94,9 @@ def post_firebase(path,data):
 
 ################################################################################
 ## Takes JSON object representing food item data as input and stores it in database
-def post_item(json_item):
+def post_item(uid, json_item):
     # Find last unique item ID
-    last_ID = get_firebase('/Location/Fridge/Size')
+    last_ID = get_firebase('/%s/Location/Fridge/Size' % uid)
 
     if last_ID == None:
         last_ID = 0
@@ -106,16 +106,16 @@ def post_item(json_item):
     new_ID = last_ID + 1
     
     # Update last unique item ID
-    post_firebase('/Location/Fridge/Size/', new_ID)
+    post_firebase('/%s/Location/Fridge/Size/' % uid, new_ID)
     
     # Location is hardcoded to fridge right now
     path = 'Location/Fridge/' + str(last_ID)
     # if(location==1):
-    #     path = 'Location/Freezer/'+ unique_item_ID
+    #     path = ('/%s/Location/Freezer/' % uid)+ unique_item_ID
     # elif(location==2):
-    #     path = 'Location/Fridge/'+ unique_item_ID
+    #     path = ('/%s/Location/Fridge/' % uid)+ unique_item_ID
     #  elif(location==3):
-    #     path = 'Location/Pantry/'+ unique_item_ID
+    #     path = ('/%s/Location/Pantry/' % uid)+ unique_item_ID
 
     post_firebase(path, json_item)
     

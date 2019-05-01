@@ -81,7 +81,7 @@ export default class ViewInventory extends Component {
                 />
                 <Button
                   onPress={() => {
-                    console.log('ITEM EDITTED');
+                    console.log('ITEM CHANGED');
                   }}
                   title='EDIT ITEM'
                   titleStyle={{ fontSize: 20 }}
